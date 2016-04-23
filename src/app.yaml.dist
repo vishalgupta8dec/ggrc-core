@@ -15,6 +15,12 @@ manual_scaling:
   instances: {MAX_INSTANCES}
 
 handlers:
+  - url: /static/fonts
+    static_dir: ggrc/static/fonts
+    mime_type: application/font-woff
+    http_headers:
+      Access-Control-Allow-Origin: '*'
+
   - url: /static
     static_dir: ggrc/static
     http_headers:
