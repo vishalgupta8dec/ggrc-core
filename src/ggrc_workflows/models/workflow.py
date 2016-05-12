@@ -10,10 +10,13 @@ of the Objects that are mapped to any cycle tasks.
 """
 
 from datetime import date
+from sqlalchemy import and_
 from sqlalchemy import not_
 from sqlalchemy import orm
 
 from ggrc import db
+from ggrc.fulltext import get_indexer
+from ggrc.fulltext.recordbuilder import fts_record_for
 from ggrc.login import get_current_user
 from ggrc.models import mixins
 from ggrc.models import reflection
@@ -23,6 +26,8 @@ from ggrc.models.context import HasOwnContext
 from ggrc.models.mixins import deferred
 from ggrc.models.person import Person
 from ggrc_basic_permissions.models import UserRole
+from ggrc_workflows.models import cycle
+from ggrc_workflows.models import cycle_task_group
 from ggrc_workflows.models import workflow_person
 
 
@@ -105,6 +110,12 @@ class Workflow(mixins.CustomAttributable, HasOwnContext, mixins.Timeboxed,
   is_old_workflow = deferred(
       db.Column(db.Boolean, default=False, nullable=True), 'Workflow')
 
+  # This column needs to be deferred because one of the migrations
+  # uses Workflow as a model and breaks since at that point in time
+  # there is no 'kind' column yet
+  kind = deferred(
+      db.Column(db.String, default=None, nullable=True), 'Workflow')
+
   @computed_property
   def workflow_state(self):
     return WorkflowState.get_workflow_state(self.cycles)
@@ -126,6 +137,7 @@ class Workflow(mixins.CustomAttributable, HasOwnContext, mixins.Timeboxed,
       reflection.PublishOnly('next_cycle_start_date'),
       reflection.PublishOnly('non_adjusted_next_cycle_start_date'),
       reflection.PublishOnly('workflow_state'),
+      reflection.PublishOnly('kind')
   ]
 
   _aliases = {
@@ -227,6 +239,70 @@ class Workflow(mixins.CustomAttributable, HasOwnContext, mixins.Timeboxed,
         orm.subqueryload('workflow_people'),
     )
 
+  @classmethod
+  def ensure_backlog_workflow_exists(cls):
+    """Ensures there is at least one backlog workflow with an active cycle.
+    If such workflow does not exist it creates one."""
+
+    def any_active_cycle(workflows):
+      """Checks if any active cycle exists from given workflows"""
+      for workflow in workflows:
+        for cur_cycle in workflow.cycles:
+          if cur_cycle.is_current:
+            return True
+      return False
+
+    # Check if backlog workflow already exists
+    backlog_workflows = Workflow.query\
+                                .filter(and_
+                                        (Workflow.kind == "Backlog",
+                                         Workflow.frequency == "one_time"))\
+                                .all()
+
+    if len(backlog_workflows) > 0 and any_active_cycle(backlog_workflows):
+      return "At least one backlog workflow already exists"
+    # Create a backlog workflow
+    backlog_workflow = Workflow(description="Backlog workflow",
+                                title="Backlog (one time)",
+                                frequency="one_time",
+                                status="Active",
+                                recurrences=0,
+                                kind="Backlog")
+
+    # create wf context
+    wf_ctx = backlog_workflow.get_or_create_object_context(context=1)
+    backlog_workflow.context = wf_ctx
+    db.session.flush(backlog_workflow)
+    # create a cycle
+    backlog_cycle = cycle.Cycle(description="Backlog workflow",
+                                title="Backlog (one time)",
+                                is_current=1,
+                                status="Assigned",
+                                start_date=None,
+                                end_date=None,
+                                context=backlog_workflow
+                                .get_or_create_object_context(),
+                                workflow=backlog_workflow)
+
+    # create a cycletaskgroup
+    backlog_ctg = cycle_task_group\
+        .CycleTaskGroup(description="Backlog workflow taskgroup",
+                        title="Backlog TaskGroup",
+                        cycle=backlog_cycle,
+                        status="InProgress",
+                        start_date=None,
+                        end_date=None,
+                        context=backlog_workflow
+                        .get_or_create_object_context())
+    db.session.add_all([backlog_workflow, backlog_cycle, backlog_ctg])
+    db.session.flush()
+
+    # add fulltext entries
+    get_indexer().create_record(fts_record_for(backlog_workflow))
+    get_indexer().create_record(fts_record_for(backlog_cycle))
+    get_indexer().create_record(fts_record_for(backlog_ctg))
+    return "Backlog workflow created"
+
 
 class WorkflowState(object):
   """Object state mixin.
@@ -262,7 +338,6 @@ class WorkflowState(object):
     """
     states = [task.status or "Assigned" for task in current_tasks]
 
-    resulting_state = ""
     if states.count("Verified") == len(states):
       resulting_state = "Verified"
     elif states.count("Finished") == len(states):

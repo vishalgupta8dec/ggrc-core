@@ -1,7 +1,10 @@
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 # Created By: dan@reciprocitylabs.com
-# Maintained By: dan@reciprocitylabs.com
+# Maintained By: peter@reciprocitylabs.com
+
+"""A module containing the workflow TaskGroupObject model."""
+
 
 from sqlalchemy.ext.associationproxy import association_proxy
 
@@ -12,10 +15,15 @@ from ggrc.models.reflection import PublishOnly
 
 
 class TaskGroupObject(Timeboxed, Mapping, db.Model):
+  """Workflow TaskGroupObject model."""
+
   __tablename__ = 'task_group_objects'
 
   task_group_id = db.Column(
-      db.Integer, db.ForeignKey('task_groups.id'), nullable=False)
+      db.Integer,
+      db.ForeignKey('task_groups.id', ondelete="CASCADE"),
+      nullable=False,
+  )
   object_id = db.Column(db.Integer, nullable=False)
   object_type = db.Column(db.String, nullable=False)
 
@@ -35,7 +43,8 @@ class TaskGroupObject(Timeboxed, Mapping, db.Model):
     return setattr(self, self.object_attr, value)
 
   @staticmethod
-  def _extra_table_args(cls):
+  def _extra_table_args(klass):
+    # pylint: disable=unused-argument
     return (
         db.UniqueConstraint('task_group_id', 'object_id', 'object_type'),
         db.Index('ix_task_group_id', 'task_group_id'),

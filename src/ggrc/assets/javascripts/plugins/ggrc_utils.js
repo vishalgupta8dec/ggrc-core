@@ -154,7 +154,9 @@
 
       canMap = Permission.is_allowed_for('update', source) ||
         sourceType === 'Person' ||
-        _.contains(createContexts, sourceContext);
+        _.contains(createContexts, sourceContext) ||
+        // Also allow mapping to source if the source is about to be created.
+        _.isUndefined(source.created_at);
 
       if (target instanceof can.Model) {
         canMap = canMap &&

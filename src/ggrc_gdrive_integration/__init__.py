@@ -10,10 +10,8 @@ from ggrc import settings       # noqa
 from ggrc.app import app        # noqa
 from ggrc.models import Audit
 from ggrc.models import Document
-from ggrc.models import DocumentationResponse
 from ggrc.models import Meeting
 from ggrc.models import Program
-from ggrc.models import PopulationSampleResponse
 from ggrc.models import Request
 from ggrc.services.registry import service
 from ggrc_basic_permissions.contributed_roles import RoleContributions
@@ -40,20 +38,6 @@ Audit.__bases__ = (Folderable,) + Audit.__bases__
 Audit.late_init_folderable()
 Request.__bases__ = (Folderable,) + Request.__bases__
 Request.late_init_folderable()
-DocumentationResponse.__bases__ = (Folderable,) + \
-    DocumentationResponse.__bases__
-DocumentationResponse.late_init_folderable()
-DocumentationResponse.__bases__ = (Fileable,) + DocumentationResponse.__bases__
-DocumentationResponse.late_init_fileable()
-# InterviewResponse.__bases__ = (Fileable,) + InterviewResponse.__bases__
-# InterviewResponse.late_init_fileable()
-PopulationSampleResponse.__bases__ = (Folderable,) + \
-    PopulationSampleResponse.__bases__
-PopulationSampleResponse.late_init_folderable()
-PopulationSampleResponse.__bases__ = (Fileable,) + \
-    PopulationSampleResponse.__bases__
-PopulationSampleResponse.late_init_fileable()
-# Program._publish_attrs.append('object_folders')
 Document.__bases__ = (Fileable,) + Document.__bases__
 Document.late_init_fileable()
 Meeting.__bases__ = (Eventable,) + Meeting.__bases__

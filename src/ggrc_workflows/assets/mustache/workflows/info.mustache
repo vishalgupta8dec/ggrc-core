@@ -23,54 +23,57 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="drop1" role="menu">
             {{{render_hooks instance.class.shortName 'info_widget_actions'}}}
-            <li>
-              <a href="javascript://" data-toggle="modal-ajax-form" data-object-plural="{{model.table_plural}}" data-object-singular="{{model.model_singular}}" data-modal-reset="reset" data-modal-class="modal-wide" title="Edit {{model.model_title}}" data-object-id="{{instance.id}}">
-                <i class="fa fa-pencil-square-o"></i>
-                Edit Workflow Info
-              </a>
-            </li>
+            {{^if_equals instance.kind "Backlog"}}
+              <li>
+                <a href="javascript://" data-toggle="modal-ajax-form" data-object-plural="{{model.table_plural}}" data-object-singular="{{model.model_singular}}" data-modal-reset="reset" data-modal-class="modal-wide" title="Edit {{model.model_title}}" data-object-id="{{instance.id}}">
+                  <i class="fa fa-pencil-square-o"></i>
+                  Edit Workflow Info
+                </a>
+              </li>
+            {{/if_equals}}
             <li>
               <clipboard-link title="Get permalink" notify="true" text="{{get_permalink_url}}" />
             </li>
-            <li>
-              <workflow-clone workflow="instance">
-                <a href="javascript://">
-                  <i class="fa fa-plus-circle"></i>
-                  Clone Workflow
-                </a>
-              </workflow-clone>
-            </li>
-            {{#if instance.recurrences}}
-            <li>
-              <workflow-start-cycle workflow="instance">
-                <workflow-activate workflow="instance" deferredData="can_activate">
-                  {{#can_activate}}
-                    <a href="#workflowStart" {{^instance.task_groups.length}}disabled="disabled"{{/task_groups}}>
-                      <i class="fa fa-sliders"></i>
-                      Manually Start a Cycle
-                    </a>
-                  {{/can_activate}}
-                </workflow-activate>
-              </workflow-start-cycle>
-            </li>
-            <li>
-              <workflow-deactivate workflow="instance">
-                <a href="#workflowStart" {{^instance.task_groups.length}}disabled="disabled"{{/task_groups}}>
-                  <i class="fa fa-archive"></i>
-                  Archive workflow
-                </a>
-              </workflow-deactivate>
-            </li>
-            {{/if}}
-
-            {{#is_allowed 'delete' instance}}
+            {{^if_equals instance.kind "Backlog"}}
               <li>
-                <a data-toggle="modal-ajax-deleteform" data-object-plural="{{model.table_plural}}" data-object-singular="{{model.model_singular}}" data-modal-reset="reset" data-modal-class="modal" data-object-id="{{instance.id}}" href="javascript://">
-                  <i class="fa fa-trash"></i>
-                  Delete
-                </a>
+                <workflow-clone workflow="instance">
+                  <a href="javascript://">
+                    <i class="fa fa-clone"></i>
+                    Clone Workflow
+                  </a>
+                </workflow-clone>
               </li>
-            {{/is_allowed}}
+              {{#if instance.recurrences}}
+              <li>
+                <workflow-start-cycle workflow="instance">
+                  <workflow-activate workflow="instance" deferredData="can_activate">
+                    {{#can_activate}}
+                      <a href="#workflowStart" {{^instance.task_groups.length}}disabled="disabled"{{/task_groups}}>
+                        <i class="fa fa-sliders"></i>
+                        Manually Start a Cycle
+                      </a>
+                    {{/can_activate}}
+                  </workflow-activate>
+                </workflow-start-cycle>
+              </li>
+              <li>
+                <workflow-deactivate workflow="instance">
+                  <a href="#workflowStart" {{^instance.task_groups.length}}disabled="disabled"{{/task_groups}}>
+                    <i class="fa fa-archive"></i>
+                    Archive workflow
+                  </a>
+                </workflow-deactivate>
+              </li>
+              {{/if}}
+              {{#is_allowed 'delete' instance}}
+                <li>
+                  <a data-toggle="modal-ajax-deleteform" data-object-plural="{{model.table_plural}}" data-object-singular="{{model.model_singular}}" data-modal-reset="reset" data-modal-class="modal" data-object-id="{{instance.id}}" href="javascript://">
+                    <i class="fa fa-trash"></i>
+                    Delete
+                  </a>
+                </li>
+              {{/is_allowed}}
+            {{/if_equals}}
           </ul>
         </div>
       {{/is_allowed}}

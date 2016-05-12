@@ -53,13 +53,3 @@ class TestAdminDashboardPage(base.Test):
         self._element.SCOPE_WORKFLOW
     assert admin_roles_widget.scope_workflow_owner.text == \
         self._element.SCOPE_WORKFLOW
-
-  @pytest.mark.smoke_tests
-  def test_custom_attributes(self, selenium, custom_program_attribute):
-    """Test general functions of custom attributes for the program object"""
-    selenium.get(dashboard.AdminDashboard.URL)
-    dashboard.AdminDashboard(selenium) \
-        .select_custom_attributes()\
-        .select_programs()\
-        .edit_nth_member(0)\
-        .save_and_close()

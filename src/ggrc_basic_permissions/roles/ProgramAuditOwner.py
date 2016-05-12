@@ -19,9 +19,6 @@ permissions = {
         "Assessment",
         "AssessmentTemplate",
         "Issue",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "UserRole",
         "Audit",
         "AuditObject",
@@ -39,9 +36,6 @@ permissions = {
         "Assessment",
         "AssessmentTemplate",
         "Issue",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "UserRole",
         "Audit",
         "AuditObject",
@@ -51,8 +45,7 @@ permissions = {
         "ObjectPerson",
         "Relationship",
         "Document",
-        "Meeting",
-        "Response"
+        "Meeting"
     ],
     "view_object_page": [
         "__GGRC_ALL__"
@@ -62,9 +55,6 @@ permissions = {
         "Assessment",
         "AssessmentTemplate",
         "Issue",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "UserRole",
         "Audit",
         "AuditObject",

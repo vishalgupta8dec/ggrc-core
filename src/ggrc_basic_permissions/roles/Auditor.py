@@ -14,9 +14,6 @@ permissions = {
         "Request",
         "Assessment",
         "Issue",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Meeting",
         "ObjectDocument",
         "ObjectPerson",
@@ -32,9 +29,6 @@ permissions = {
         "Assessment",
         "Issue",
         "Relationship",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Comment",
     ],
     "view_object_page": [
@@ -44,17 +38,11 @@ permissions = {
         "Request",
         "Assessment",
         "Issue",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Comment"
     ],
     "delete": [
         "Request",
         "Assessment",
-        "Issue",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
+        "Issue"
     ],
 }

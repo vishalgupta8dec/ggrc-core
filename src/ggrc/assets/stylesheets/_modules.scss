@@ -8,6 +8,8 @@
 @import "modules/advanced-info";
 @import "modules/attachment-list";
 @import "modules/comments";
+@import "modules/comment-notification";
+@import "modules/distraction-free-view";
 @import "modules/extended-info";
 @import "modules/file-controls";
 @import "modules/filters";
@@ -36,4 +38,6 @@
 @import "modules/tree-content";
 @import "modules/tree-header";
 @import "modules/workflow";
-@import "modules/distraction-free-view";
+@import "modules/spinner";
+@import "modules/inline-edit";
+@import "modules/sortable";

@@ -36,6 +36,47 @@
     };
   }
 
+  function populateFromWorkflow(form, workflow) {
+    if (!workflow || typeof workflow === 'string') {
+      // We need to invalidate the form, so we remove workflow if it's not set
+      form.removeAttr('workflow');
+      return;
+    }
+    if (workflow.reify) {
+      workflow = workflow.reify();
+    } else {
+      console.log("Can't reify workflow");
+      return;
+    }
+    if (typeof workflow.cycles === undefined || !workflow.cycles) {
+      $(document.body).trigger(
+        "ajax:flash"
+        , {warning: "No cycles in the workflow!"}
+      );
+      return;
+    }
+
+    workflow.refresh_all('cycles').then(function (cycleList) {
+      var activeCycleList = _.filter(cycleList, {is_current: true});
+      var activeCycle;
+
+      if (!activeCycleList.length) {
+        $(document.body).trigger(
+          "ajax:flash"
+          , {warning: "No active cycles in the workflow!"}
+        );
+        return;
+      }
+      activeCycleList = _.sortByOrder(
+        activeCycleList, ['start_date'], ['desc']);
+      activeCycle = activeCycleList[0];
+      form.attr('workflow', {id: workflow.id, type: 'Workflow'});
+      form.attr('context', {id: workflow.context.id, type: 'Context'});
+      form.attr('cycle', {id: activeCycle.id, type: 'Cycle'});
+      form.cycle_task_group = activeCycle.cycle_task_groups[0].id;
+    });
+  }
+
   _mustache_path = GGRC.mustache_path + "/cycles";
   can.Model.Cacheable("CMS.Models.Cycle", {
     root_object: "cycle",
@@ -247,7 +288,6 @@
     update: "PUT /api/cycle_task_group_object_tasks/{id}",
     destroy: "DELETE /api/cycle_task_group_object_tasks/{id}",
     title_singular: "Cycle Task",
-
     attributes: {
       cycle_task_group: "CMS.Models.CycleTaskGroup.stub",
       task_group_task: "CMS.Models.TaskGroupTask.stub",
@@ -280,7 +320,7 @@
         {attr_title: 'End Date', attr_name: 'end_date'},
         {attr_title: 'Last Updated', attr_name: 'updated_at'}
       ],
-      display_attr_names: ['title', 'mapped_object', 'workflow'],
+      display_attr_names: ['title', 'assignee', 'start_date'],
       mandatory_attr_name: ['title'],
       draw_children: true,
       child_options: [
@@ -296,19 +336,15 @@
         }
       ]
     },
-
     init: function() {
       var that = this;
       this._super.apply(this, arguments);
       this.validateNonBlank("title");
-      this.validateNonBlank("contact");
+      this.validateNonBlank("workflow");
+      this.validateNonBlank("cycle");
       this.validateContact(["_transient.contact", "contact"]);
-
-      this.validate(['start_date', 'end_date'], function (newVal, prop) {
-        if (!(this.start_date && this.end_date)) {
-          return "Start and/or end date is invalid";
-        }
-      });
+      this.validateNonBlank("start_date");
+      this.validateNonBlank("end_date");
 
       this.bind("updated", function (ev, instance) {
         if (instance instanceof that) {
@@ -320,10 +356,59 @@
     }
   }, {
     overdue: overdue_compute,
-    workflow: function () {
+    _workflow: function () {
       return this.refresh_all('cycle', 'workflow').then(function (workflow) {
         return workflow;
       });
+    },
+    set_properties_from_workflow: function (workflow) {
+      // The form sometimes returns plaintext instead of object, return in that case
+      if (typeof workflow === 'string') {
+        return;
+      }
+      populateFromWorkflow(this, workflow);
+    },
+    form_preload: function (newObjectForm) {
+      var form = this;
+      var workflows;
+      var _workflow;
+      var cycle;
+
+      if (newObjectForm) {
+        if (!form.contact) {
+          form.attr("contact", {id: GGRC.current_user.id, type: "Person"});
+        }
+
+        // using setTimeout to execute this after the modal is loaded
+        // so we can see when the workflow is already set and use that one
+        setTimeout(function () {
+          // if we are creating a task from the workflow page, the preset
+          // workflow should be that one
+          if (form.workflow !== undefined) {
+            populateFromWorkflow(form, form.workflow);
+            return;
+          }
+
+          workflows = CMS.Models.Workflow.findAll({
+            kind: 'Backlog', status: 'Active', __sort: '-created_at'});
+          workflows.then(function (workflowList) {
+            if (!workflowList.length) {
+              $(document.body).trigger(
+                "ajax:flash"
+                , {warning: "No Backlog workflows found! Contact your administrator to enable this functionality."}
+              );
+              return;
+            }
+            _workflow = workflowList[0];
+            populateFromWorkflow(form, _workflow);
+          });
+        }, 0);
+      } else {
+        cycle = form.cycle.reify();
+        if (!_.isUndefined(cycle.workflow)) {
+          form.attr('workflow', cycle.workflow.reify());
+        }
+      }
     },
     object: function () {
       return this.refresh_all('task_group_object', 'object').then(function (object) {

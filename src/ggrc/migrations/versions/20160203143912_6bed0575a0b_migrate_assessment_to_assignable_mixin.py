@@ -6,7 +6,7 @@
 """Migrate Assessment to Assignable mixin
 
 Revision ID: 6bed0575a0b
-Revises: 262bbe790f4c
+Revises: 1abb0a2e8ca0
 Create Date: 2016-02-03 14:39:12.737518
 
 """

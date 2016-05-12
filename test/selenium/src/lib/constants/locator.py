@@ -49,14 +49,14 @@ class Dashboard(object):
   """Locators for the dashbord page"""
 
   BUTTON_START_NEW_PROGRAM = (
-      By.CSS_SELECTOR, '.quick-list [data-object-singular="Program"]')
+      By.CSS_SELECTOR, '.get-started__list [data-object-singular="Program"]')
   BUTTON_START_NEW_AUDIT = (
-      By.CSS_SELECTOR, '.quick-list [data-object-singular="Audit"]')
+      By.CSS_SELECTOR, '.get-started__list [data-object-singular="Audit"]')
   BUTTON_START_NEW_WORKFLOW = (
-      By.CSS_SELECTOR, '.quick-list [data-object-singular="Workflow"]')
+      By.CSS_SELECTOR, '.get-started__list [data-object-singular="Workflow"]')
   BUTTON_CREATE_NEW_OBJECT = (
-      By.CSS_SELECTOR, '.quick-list [href="#"]')
-  BUTTON_ALL_OBJECTS = (By.CSS_SELECTOR, '.quick-list '
+      By.CSS_SELECTOR, '.get-started__list [href="#"]')
+  BUTTON_ALL_OBJECTS = (By.CSS_SELECTOR, '.get-started__list '
                                          '[href="/objectBrowser"]')
 
 
@@ -718,18 +718,16 @@ class WidgetAdminRoles(object):
 
 class WidgetInfoSettingsButton(object):
   """Locators for the control info widget"""
-  class _Locator(object):
-    @staticmethod
-    def get_dropdown_item(child_id):
-      return (By.CSS_SELECTOR,
-              '.info-pane-utility .dropdown-menu li:nth-child({})'
-              .format(child_id))
-
   TITLE_ENTERED = (By.CSS_SELECTOR, '[data-test-id="title_0ad9fbaf"]>h3')
 
-  DROPDOWN_SETTINGS_EDIT = _Locator.get_dropdown_item(1)
-  DROPDOWN_SETTINGS_PERMALINK = _Locator.get_dropdown_item(2)
-  DROPDOWN_SETTINGS_DELETE = _Locator.get_dropdown_item(3)
+  DROPDOWN_SETTINGS_EDIT = (
+      By.CSS_SELECTOR,
+      '[data-test-id="dropdown_settings_edit_f4b27aec"]')
+  DROPDOWN_SETTINGS_PERMALINK = (
+      By.CSS_SELECTOR,
+      '[data-test-id="dropdown_settings_get_permalink_75e3bf91"]')
+  DROPDOWN_SETTINGS_DELETE = (
+      By.CSS_SELECTOR, '[data-test-id="dropdown_settings_delete_6a62eaaf"]')
 
 
 class BaseWidgetGeneric(object):

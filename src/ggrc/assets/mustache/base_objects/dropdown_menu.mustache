@@ -44,7 +44,8 @@
           },
           "audit_title": "{{json_escape instance.title}}"
         }'
-        >
+      >
+        <i class="fa fa-sliders"></i>
         Define Assessment template
       </a>
     </li>
@@ -52,7 +53,35 @@
     {{/if_equals}}
 
     <li>
-      <clipboard-link title="Get permalink" notify="true" text="{{get_permalink_for_object instance}}" />
+      {{#is_allowed 'create' 'CycleTaskGroupObjectTask' context=null}}
+        {{#is_allowed 'update' instance context='for'}}
+          <a
+            rel="tooltip"
+            data-placement="left"
+            data-original-title="Create Cycle Task for object"
+            data-object-plural="cycle_task_group_object_tasks"
+            data-modal-class="modal-wide" href="javascript://"
+            data-object-singular="CycleTaskGroupObjectTask"
+            data-toggle="modal-ajax-form"
+            data-modal-reset="reset"
+            data-object-params='{
+              "pre_mapped_objects": [{
+                "type": "{{ instance.type }}",
+                "id": {{ instance.id }}
+              }],
+              "modal_title": "Create New Task"}'>
+            <i class="fa fa-calendar-check-o"></i> Create task
+          </a>
+        {{/is_allowed}}
+      {{/is_allowed}}
+    </li>
+
+    <li>
+      <clipboard-link
+              data-test-id="dropdown_settings_get_permalink_75e3bf91"
+              title="Get permalink"
+              notify="true"
+              text="{{get_permalink_for_object instance}}" />
     </li>
 
     {{#is_info_pin}}
@@ -76,7 +105,7 @@
 
     {{#is_allowed 'delete' instance}}
       <li>
-        <a data-test-id="dropdown_delete_0839163b"
+        <a data-test-id="dropdown_settings_delete_6a62eaaf"
            data-toggle="modal-ajax-deleteform"
            data-object-plural="{{model.table_plural}}"
            data-object-singular="{{model.model_singular}}"

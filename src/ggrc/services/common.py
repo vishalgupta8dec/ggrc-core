@@ -25,6 +25,7 @@ import sqlalchemy.orm.exc
 from werkzeug.exceptions import BadRequest, Forbidden
 
 import ggrc.builder.json
+import ggrc.models
 from flask.ext.sqlalchemy import Pagination
 from ggrc import db, utils
 from ggrc.utils import as_json, UnicodeSafeJsonWrapper, benchmark
@@ -959,8 +960,9 @@ class Resource(ModelView):
       # because it will filter out objects that the Creator can access.
       # We are doing a special permissions check for these objects
       # below in the filter_resource method.
-      filter_by_contexts = not (self.model.__name__ == "Relationship" and
-                                _is_creator())
+      filter_by_contexts = not (
+          self.model.__name__ in ("Relationship", "Revision") and _is_creator()
+      )
       matches_query = self.get_collection_matches(
           self.model, filter_by_contexts)
     with benchmark("dispatch_request > collection_get > Query Data"):
@@ -1374,8 +1376,8 @@ def filter_resource(resource, depth=0, user_permissions=None):  # noqa
     if resource['type'] == "Relationship" and _is_creator():
       # Make a check for relationship objects that are a special case
       can_read = True
-      for t in ('source', 'destination'):
-        inst = resource[t]
+      for name in ('source', 'destination'):
+        inst = resource[name]
         if not inst:
           # If object was deleted but relationship still exists
           continue
@@ -1390,6 +1392,13 @@ def filter_resource(resource, depth=0, user_permissions=None):  # noqa
           continue
         can_read = False
       if not can_read:
+        return None
+    elif resource['type'] == "Revision" and _is_creator():
+      # Make a check for revision objects that are a special case
+      res_model = getattr(ggrc.models.all_models, resource['resource_type'])
+      instance = res_model.query.get(resource['resource_id'])
+      if instance is None or\
+         not user_permissions.is_allowed_read_for(instance):
         return None
     else:
       if not user_permissions.is_allowed_read(resource['type'],

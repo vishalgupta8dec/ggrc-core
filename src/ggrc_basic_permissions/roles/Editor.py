@@ -49,12 +49,9 @@ permissions = {
         "Process",
         "Person",
         "Program",
+        "Revision",
         "Role",
         "Request",
-        "Response",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Context",
         {
             "type": "BackgroundTask",
@@ -67,7 +64,7 @@ permissions = {
     ],
     "create": [
         "Audit",
-        "Workflow"
+        "Workflow",
         "Categorization",
         "Category",
         "Comment",
@@ -108,10 +105,6 @@ permissions = {
         "Role",
         "UserRole",
         "Request",
-        "Response",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Context",
         {
             "type": "BackgroundTask",
@@ -168,10 +161,6 @@ permissions = {
         "Role",
         "UserRole",
         "Request",
-        "Response",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Context",
         {
             "type": "BackgroundTask",
@@ -184,7 +173,7 @@ permissions = {
     ],
     "delete": [
         "Audit",
-        "Workflow"
+        "Workflow",
         "Categorization",
         "Category",
         "Comment",
@@ -224,10 +213,6 @@ permissions = {
         "Role",
         "UserRole",
         "Request",
-        "Response",
-        "DocumentationResponse",
-        "InterviewResponse",
-        "PopulationSampleResponse",
         "Context",
         {
             "type": "BackgroundTask",

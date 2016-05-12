@@ -17,31 +17,35 @@
     scope: {
       binding: '@',
       responses: [],
+      instance: null,
       templates: function () {
-        var type = this.attr('type');
+        var result = {};
         var responses = this.attr('responses');
         var noValue = {
           title: 'No template',
           value: ''
         };
-        var items = _.compact(_.map(responses, function (response) {
+        _.each(responses, function (response) {
+          var type;
+          var instance;
+
           if (!response.instance) {
             return;
           }
-          if (response.instance.template_object_type !== type) {
-            return;
+          instance = response.instance;
+          type = instance.template_object_type;
+          if (!result[type]) {
+            result[type] = {
+              group: type,
+              subitems: []
+            };
           }
-          return {
-            title: response.instance.title,
-            value: response.instance.id
-          };
-        }));
-        return [noValue].concat(items);
-      }
-    },
-    events: {
-      '{scope} type': function () {
-        this.scope.attr('assessmentTemplate', '');
+          result[type].subitems.push({
+            title: instance.title,
+            value: instance.id + '-' + type
+          });
+        });
+        return [noValue].concat(_.toArray(result));
       }
     },
     init: function () {

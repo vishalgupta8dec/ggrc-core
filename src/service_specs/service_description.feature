@@ -40,10 +40,6 @@ Feature: Rather than have clients keep a list of the endpoint URLs for
       | ProgramDirective   |
       | Relationship       |
       | Request            |
-#      | Response           |
-      | DocumentationResponse    |
-      | InterviewResponse        |
-      | PopulationSampleResponse |
       | Section            |
       | SystemOrProcess    |
       | System             |

@@ -317,6 +317,7 @@
       var $target;
       var $flashHolder;
       var type;
+      var message;
       var messageI;
       var flashClass;
       var flashClassMappings = {notice: 'success'};
@@ -346,7 +347,7 @@
 
       for (type in flash) {
         if (flash[type]) {
-          if (typeof (flash[type]) === 'string') {
+          if (_.isString(flash[type])) {
             flash[type] = [flash[type]];
           }
 
@@ -357,7 +358,12 @@
           $html.append('<a href="#" class="close" data-dismiss="alert">x</a>');
 
           for (messageI in flash[type]) {
-            $html.append($('<span></span>').text(flash[type][messageI]));
+            message = flash[type][messageI];
+            // Skip error codes. To force display use String(...) when
+            // triggering the flash.
+            if (_.isString(message)) {
+              $html.append($('<span></span>').text(flash[type][messageI]));
+            }
           }
           $flashHolder.append($html);
         }

@@ -38,9 +38,9 @@
         <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
       </label>
       <select name="task_type" tabindex="2">
-        {{#iterate 'text' 'Rich text' 'menu' 'Dropdown' 'checkbox' 'Checkboxes' step=2}}
-          <option value="{{iterator_0}}" {{#if_equals instance.task_type iterator_0}}selected="selected"{{/if_equals}}>{{iterator_1}}</option>
-        {{/iterate}}
+        <option value="text" {{#if_equals instance.task_type 'text'}}selected="selected"{{/if_equals}}>Rich text</option>
+        <option value="menu" {{#if_equals instance.task_type 'menu'}}selected="selected"{{/if_equals}}>Dropdown</option>
+        <option value="checkbox" {{#if_equals instance.task_type 'checkbox'}}selected="selected"{{/if_equals}}>Checkbox</option>
       </select>
       <br>
       <label>

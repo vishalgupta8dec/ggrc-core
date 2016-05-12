@@ -208,3 +208,40 @@ class TestCreator(TestCase):
     self.assertEqual(response.status_code, 200)
     num = len(response.json["relationships_collection"]["relationships"])
     self.assertEqual(num, 0)
+
+  def test_revision_access(self):
+    """Check if creator can access the right revision objects."""
+
+    def gen(title):
+      return self.generator.generate(all_models.Section, "section", {
+          "section": {"title": title, "context": None},
+      })[1]
+
+    def check(obj, expected):
+      """Check that how many revisions of an object current user can see."""
+      response = self.api.get_query(
+          all_models.Revision,
+          "resource_type={}&resource_id={}".format(obj.type, obj.id)
+      )
+      self.assertEqual(response.status_code, 200)
+      self.assertEqual(
+          len(response.json['revisions_collection']['revisions']),
+          expected
+      )
+
+    self.api.set_user(self.users["admin"])
+    obj_1 = gen("Test Section 1")
+    obj_2 = gen("Test Section 2")
+
+    self.api.post(all_models.ObjectOwner, {"object_owner": {
+        "person": {
+            "id": self.users['creator'].id,
+            "type": "Person",
+        }, "ownable": {
+            "type": "Section",
+            "id": obj_2.id,
+        }, "context": None}})
+
+    self.api.set_user(self.users["creator"])
+    check(obj_1, 0)
+    check(obj_2, 1)

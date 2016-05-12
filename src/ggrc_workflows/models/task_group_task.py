@@ -1,7 +1,10 @@
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 # Created By: dan@reciprocitylabs.com
-# Maintained By: dan@reciprocitylabs.com
+# Maintained By: peter@reciprocitylabs.com
+
+"""A module containing the workflow TaskGroupTask model."""
+
 
 from datetime import date
 from datetime import datetime
@@ -18,6 +21,8 @@ from ggrc_workflows.models.task_group import TaskGroup
 
 class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
                     Base, db.Model):
+  """Workflow TaskGroupTask model."""
+
   __tablename__ = 'task_group_tasks'
   __table_args__ = (
       schema.CheckConstraint('start_date <= end_date'),
@@ -34,13 +39,19 @@ class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
     return "TASK"
 
   task_group_id = db.Column(
-      db.Integer, db.ForeignKey('task_groups.id'), nullable=False)
+      db.Integer,
+      db.ForeignKey('task_groups.id', ondelete="CASCADE"),
+      nullable=False,
+  )
   sort_index = db.Column(
       db.String(length=250), default="", nullable=False)
+
   object_approval = db.Column(
       db.Boolean, nullable=False, default=False)
+
   task_type = db.Column(
       db.String(length=250), default=default_task_type, nullable=False)
+
   response_options = db.Column(
       JsonType(), nullable=False, default='[]')
 
@@ -48,6 +59,7 @@ class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
 
   @orm.validates('task_type')
   def validate_task_type(self, key, value):
+    # pylint: disable=unused-argument
     if value is None:
       value = self.default_task_type()
     if value not in self.VALID_TASK_TYPES:
@@ -161,7 +173,7 @@ class TaskGroupTask(WithContact, Slugged, Titled, Described, RelativeTimeboxed,
     ]
 
     contact = None
-    if(kwargs.get('clone_people', False)):
+    if kwargs.get('clone_people', False):
       contact = self.contact
     else:
       contact = get_current_user()

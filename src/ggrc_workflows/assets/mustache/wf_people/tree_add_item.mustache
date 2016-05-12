@@ -4,7 +4,7 @@
     Created By: ivan@reciprocitylabs.com
     Maintained By: ivan@reciprocitylabs.com
 }}
-
+{{^if_equals parent_instance.kind "Backlog"}}
 {{#if allow_mapping_or_creating}}
 {{#is_allowed_to_map parent_instance model.shortName}}
   <a
@@ -21,3 +21,4 @@
   </a>
 {{/is_allowed_to_map}}
 {{/if}}
+{{/if_equals}}

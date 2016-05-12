@@ -20,6 +20,17 @@
     destroy: "DELETE /api/workflows/{id}",
     is_custom_attributable: true,
 
+    defaults: {
+      frequency_options: [
+        {title: 'One time', value: 'one_time'},
+        {title: 'Weekly', value: 'weekly'},
+        {title: 'Monthly', value: 'monthly'},
+        {title: 'Quarterly', value: 'quarterly'},
+        {title: 'Annually', value: 'annually'}
+      ],
+      frequency: 'one_time' // default value
+    },
+
     attributes: {
       people: "CMS.Models.Person.stubs",
       workflow_people: "CMS.Models.WorkflowPerson.stubs",

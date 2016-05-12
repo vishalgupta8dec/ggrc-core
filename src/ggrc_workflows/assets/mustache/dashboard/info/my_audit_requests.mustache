@@ -84,10 +84,10 @@
           <div class="tier-content">
             <div class="row-fluid wrap-row">
               <div class="span6">
-                <h6>Requested on</h6>
-                {{#if instance.requested_on}}
-                  {{#using requested_on=instance.requested_on}}
-                    {{localize_date requested_on}}
+                <h6>Starts on</h6>
+                {{#if instance.start_date}}
+                  {{#using start_date=instance.start_date}}
+                    {{localize_date start_date}}
                   {{/using}}
                 {{/if}}
               </div>

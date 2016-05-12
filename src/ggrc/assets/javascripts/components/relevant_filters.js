@@ -33,12 +33,9 @@
       },
       menu: can.compute(function () {
         var type = this.attr('type');
-        var showAll = /true/i.test(this.attr('show_all'));
-        var isAll = type === 'AllObject';
         var mappings;
         var models;
-
-        if (showAll) {
+        if (/true/i.test(this.attr('show_all'))) {
           // find all widget types and manually add Cycle since it's missing
           // convert names to CMS models and prune invalid (undefined)
           models = ['Cycle'];
@@ -51,13 +48,11 @@
           });
           return _.sortBy(_.compact(models), 'model_singular');
         }
-        if (this.attr('search_only') && isAll) {
-          mappings = GGRC.tree_view.base_widgets_by_type;
-        } else {
-          type = isAll ? GGRC.page_model.type : this.attr('type');
-          mappings = GGRC.Mappings.get_canonical_mappings_for(type);
-        }
 
+        if (type === 'AllObject') {
+          type = GGRC.page_model.type;
+        }
+        mappings = GGRC.Mappings.get_canonical_mappings_for(type);
         return _.sortBy(_.compact(_.map(_.keys(mappings), function (mapping) {
           return CMS.Models[mapping];
         })), 'model_singular');

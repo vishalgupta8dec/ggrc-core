@@ -26,7 +26,9 @@
           <span {{attach_spinner '{ "radius": 5, "length": 5, "width": 3 }' 'display:inline-block; margin: 15px;' }}></span>
         {{else}}
           {{^can_activate}}
+            {{^if_equals instance.kind "Backlog"}}
             <p class="alert tiny-help-text" style="margin-bottom:0px;"><strong>Note:</strong> At least one of the task groups is missing either a task or an object.</p>
+            {{/if_equals}}
           {{/can_activate}}
         {{/if}}
         {{/if_equals}}

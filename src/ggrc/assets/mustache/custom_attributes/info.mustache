@@ -6,50 +6,81 @@
 }}
 
 <custom-attributes instance="instance" load="true">
-  {{#if loading}}
-  <div class="row-fluid">
-    <div class="span12">
-      Loading Custom Attributes...<span  {{attach_spinner '{ "radius": 4, "length": 7, "width": 2 }' 'display:inline-block; top: -6px; left: 20px;' }}></span>
-    </div>
-  </div>
-  {{else}}
-    {{#if instance.custom_attribute_definitions.length}}
-      {{#iterate_by_two instance.custom_attribute_definitions}}
-        <div class="row-fluid wrap-row">
-        {{#list}}
-          <div class="span6">
-            <div data-custom-attribute="{{id}}" data-type="{{attribute_type}}">
-              {{#with_value_for_id id}}
-                {{#switch attribute_type}}
-                {{#case 'Checkbox'}}
-                  <h6>
-                    <input type="checkbox" disabled="disabled" {{#if_equals value "1"}}checked="checked"{{/if_equals}}>
-                    {{title}}
-                  </h6>
-                {{/case}}
-                {{#case 'Rich Text'}}
-                  <h6>{{title}}</h6>
-                  {{{value}}}
-                {{/case}}
-                {{#case 'Map:Person'}}
-                  <h6>{{title}}</h6>
-                  {{#with_object_for_id id}}
-                    {{#using person=object}}
-                      {{>'/static/mustache/people/popover.mustache'}}
-                    {{/using}}
-                  {{/with_object_for_id}}
-                {{/case}}
-                {{#default}}
-                  <h6>{{title}}</h6>
-                  {{value}}
-                {{/default}}
-                {{/switch}}
-              {{/with_value_for_id}}
-            </div>
+  {{#if instance.custom_attribute_definitions.length}}
+    {{#iterate_by_two instance.custom_attribute_definitions}}
+      <div class="row-fluid wrap-row">
+      {{#list}}
+        <div class="span6">
+          <div data-custom-attribute="{{id}}" data-type="{{attribute_type}}">
+            {{#with_value_for_id id}}
+              {{#switch attribute_type}}
+              {{#case 'Checkbox'}}
+                <inline-edit
+                  instance="instance"
+                  ca-id="id"
+                  value="value"
+                  label="title"
+                  type="checkbox"
+                  mandatory="mandatory"
+                  placeholder="placeholder"
+                  helptext="helptext"
+                ></inline-edit>
+              {{/case}}
+              {{#case 'Rich Text'}}
+                <inline-edit
+                  instance="instance"
+                  ca-id="id"
+                  value="value"
+                  label="title"
+                  type="text"
+                  mandatory="mandatory"
+                  placeholder="placeholder"
+                  helptext="helptext"
+                ></inline-edit>
+              {{/case}}
+              {{#case 'Dropdown'}}
+                <inline-edit
+                  instance="instance"
+                  ca-id="id"
+                  value="value"
+                  label="title"
+                  type="dropdown"
+                  mandatory="mandatory"
+                  values="multi_choice_options"
+                  placeholder="placeholder"
+                  helptext="helptext"
+                ></inline-edit>
+              {{/case}}
+              {{#case 'Text'}}
+                <inline-edit
+                  instance="instance"
+                  ca-id="id"
+                  value="value"
+                  label="title"
+                  type="input"
+                  mandatory="mandatory"
+                  placeholder="placeholder"
+                  helptext="helptext"
+                ></inline-edit>
+              {{/case}}
+              {{#case 'Map:Person'}}
+                <h6>{{title}}</h6>
+                {{#with_object_for_id id}}
+                  {{#using person=object}}
+                    {{>'/static/mustache/people/popover.mustache'}}
+                  {{/using}}
+                {{/with_object_for_id}}
+              {{/case}}
+              {{#default}}
+                <h6>{{title}}</h6>
+                {{value}}
+              {{/default}}
+              {{/switch}}
+            {{/with_value_for_id}}
           </div>
-        {{/list}}
         </div>
-      {{/instance.custom_attribute_definitions}}
-    {{/if}}
-  {{/loading}}
+      {{/list}}
+      </div>
+    {{/instance.custom_attribute_definitions}}
+  {{/if}}
 </custom-attributes>

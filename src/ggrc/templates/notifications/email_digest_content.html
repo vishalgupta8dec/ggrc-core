@@ -166,7 +166,7 @@ Maintained By: miha@reciprocitylabs.com
                       Assessment:
                       <a href="{{ assessment_data['url'] }}" {{ style.link_text() }} >
                         {{ assessment_data['title'] }}
-                      </a> 
+                      </a>
                       {% if assessment_data.get('fuzzy_start_date') %}
                         starts {{ assessment_data['fuzzy_start_date'] }}.
                       {% endif %}
@@ -197,7 +197,7 @@ Maintained By: miha@reciprocitylabs.com
                       Request:
                       <a href="{{ request_data['url'] }}" {{ style.link_text() }} >
                         {{ request_data['title'] }}
-                      </a> 
+                      </a>
                       {% if request_data.get('fuzzy_start_date') %}
                         starts {{ request_data['fuzzy_start_date'] }}.
                       {% endif %}
@@ -215,6 +215,19 @@ Maintained By: miha@reciprocitylabs.com
                       <a href="{{ request_data['url'] }}" {{ style.link_text() }} >
                         {{ request_data['title'] }}
                       </a>
+                    </li>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+
+                {% if digest.get('comment_created') %}
+                  <h2 {{ style.sub_title() }} >New comments</h2>
+                  <ul {{ style.list_wrap() }} >
+                  {% for comment_id, comment in digest['comment_created'].items() %}
+                    <li {{ style.list_item() }} >
+                      {{ macro.user_name(comment['commentator']) }}
+                      left a comment on {{ comment['parent_type'] }} <a href="{{ comment['parent_url'] }}">{{ comment['parent_title'] }}</a>:<br />
+                      <p>{{ comment['description'] }}</p>
                     </li>
                   {% endfor %}
                   </ul>

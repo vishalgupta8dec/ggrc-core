@@ -54,34 +54,38 @@
      * @param {Object} options - the component instantiation options
      */
     init: function (element, options) {
+      var setUp = function () {
+        this._INSTANCE_TYPE = this.scope.instance.type;
+
+        this._fetchRevisionsData(
+          this.scope.instance
+        ).then(
+          function success(revisions) {
+            // combine all the changes and sort them by date descending
+            var changeHistory = _([]).concat(
+                _.toArray(this._computeObjectChanges(revisions.object)),
+                _.toArray(this._computeMappingChanges(revisions.mappings))
+            ).sortBy('updatedAt').reverse().value();
+            this.scope.attr('changeHistory', changeHistory);
+          }.bind(this),
+
+          function error() {
+            $(element).trigger(
+              'ajax:flash',
+              {error: 'Failed to fetch revision history data.'});
+          }
+        ).always(function () {
+          this.scope.attr('isLoading', false);
+        }.bind(this));
+      }.bind(this);
+
       if (this.scope.instance === null) {
         throw new Error('Instance not passed through the HTML element.');
       }
-
-      this._INSTANCE_TYPE = this.scope.instance.type;
-
-      this._fetchRevisionsData(
-        this.scope.instance
-      ).then(
-        function success(revisions) {
-          var changeHistory;
-          var mappingsChanges = this._computeMappingChanges(revisions.mappings);
-          var objChanges = this._computeObjectChanges(revisions.object);
-
-          // combine all the changes and sort them by date descending
-          changeHistory = objChanges.concat(mappingsChanges);
-          changeHistory = _.sortBy(changeHistory, 'updatedAt').reverse();
-          this.scope.attr('changeHistory', changeHistory);
-        }.bind(this),
-
-        function error() {
-          $(element).trigger(
-            'ajax:flash',
-            {error: 'Failed to fetch revision history data.'});
-        }
-      ).always(function () {
-        this.scope.attr('isLoading', false);
-      }.bind(this));
+      this.scope.instance.on('updated', function () {
+        setUp();
+      });
+      setUp();
     },
 
     /**
@@ -324,8 +328,54 @@
           }
         }
       }.bind(this));
-
+      diff.changes = diff.changes.concat(
+          this._objectCADiff(
+            rev1.content.custom_attributes,
+            rev1.content.custom_attribute_definitions,
+            rev2.content.custom_attributes,
+            rev2.content.custom_attribute_definitions));
       return diff;
+    },
+
+    _objectCADiff: function (origValues, origDefs, newValues, newDefs) {
+      var ids;
+      var defs;
+      var showValue = function (value, def) {
+        var obj;
+        switch (def.attribute_type) {
+          case 'Checkbox':
+            return value.attribute_value ? '✓' : undefined;
+          case 'Map:Person':
+            obj = CMS.Models.Person.findInCacheById(value.attribute_object_id);
+            if (obj === undefined) {
+              return value.attribute_value;
+            }
+            return obj.name || obj.email || value.attribute_value;
+          default:
+            return value.attribute_value;
+        }
+      };
+
+      origValues = _.indexBy(origValues, 'custom_attribute_id');
+      origDefs = _.indexBy(origDefs, 'id');
+      newValues = _.indexBy(newValues, 'custom_attribute_id');
+      newDefs = _.indexBy(newDefs, 'id');
+
+      ids = _.unique(_.keys(origValues).concat(_.keys(newValues)));
+      defs = _.merge(origDefs, newDefs);
+
+      return _.chain(ids).map(function (id) {
+        var def = defs[id];
+        var diff = {
+          fieldName: def.title,
+          origVal: showValue(origValues[id] || {}, def) || '—',
+          newVal: showValue(newValues[id] || {}, def) || '—'
+        };
+        if (diff.origVal === diff.newVal) {
+          return undefined;
+        }
+        return diff;
+      }).filter().value();
     },
 
     /**

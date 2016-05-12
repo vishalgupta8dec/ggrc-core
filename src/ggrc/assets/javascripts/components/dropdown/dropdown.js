@@ -24,6 +24,7 @@
       name: '@',
       className: '@',
       onChange: $.noop,
+      noValue: '@',
       /*
         Options list should be an `array` of object containing `title` and `value`
         [{
@@ -31,7 +32,47 @@
           value: `value`
         }]
        */
-      optionsList: null
+      optionsList: null,
+      options: function () {
+        var none = [{
+          title: 'None',
+          value: ''
+        }];
+        var list = can.map(this.attr('optionsList'), function (option) {
+          if (_.isString(option)) {
+            return {
+              value: option,
+              title: option
+            };
+          }
+          return option;
+        });
+        if (this.attr('noValue')) {
+          return none.concat(list);
+        }
+        return list;
+      },
+      isDisabled: false
+    },
+    init: function (element, options) {
+      var $el = $(element);
+      var attrVal = $el.attr('is-disabled');
+      var disable;
+      var scope = this.scope;
+
+      // By default CanJS evaluates the component element's attribute values in
+      // the current context, but we want to support passing in literal values
+      // as well. We thus inspect some of the directly and override what CanJS
+      // initializes in scope.
+      if (attrVal === '' || attrVal === 'false') {
+        disable = false;
+      } else if (attrVal === 'true') {
+        disable = true;
+      } else {
+        disable = Boolean(scope.attr('isDisabled'));
+      }
+
+      scope.attr('isDisabled', disable);
     }
   });
 })(window.can, window.can.$);

@@ -1,0 +1,16 @@
+{{!
+  Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+  Created By: ivan@reciprocitylabs.com
+  Maintained By: ivan@reciprocitylabs.com
+}}
+
+{{#if context.isEdit}}
+  {{#mandatory}}<span class="required">*</span>{{/mandatory}}
+  {{#helptext}}<i class="fa fa-question-circle" rel="tooltip" title="{{helptext}}"></i>{{/helptext}}
+  <textarea type="text" can-value="context.value" autofocus></textarea>
+{{else}}
+  <div class="inline-edit__text">
+    {{{firstnonempty context.value '<span class="empty-message">None</span>'}}}
+  </div>
+{{/if}}

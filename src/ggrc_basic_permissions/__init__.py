@@ -3,10 +3,18 @@
 # Created By: david@reciprocitylabs.com
 # Maintained By: david@reciprocitylabs.com
 
+"""Initialize RBAC"""
+
 import datetime
 import sqlalchemy.orm
 from flask import Blueprint
 from flask import g
+from sqlalchemy import and_
+from sqlalchemy import case
+from sqlalchemy import literal
+from sqlalchemy import or_
+from sqlalchemy.orm import aliased
+from sqlalchemy.orm.attributes import get_history
 from ggrc import db, settings
 from ggrc.app import app
 from ggrc_basic_permissions import basic_roles
@@ -23,19 +31,12 @@ from ggrc.models import all_models
 from ggrc.models.audit import Audit
 from ggrc.models.program import Program
 from ggrc.models.relationship import Relationship
-from ggrc.models.response import Response
 from ggrc.rbac import permissions
 from ggrc.rbac.permissions_provider import DefaultUserPermissions
 from ggrc.services.common import _get_cache_manager
 from ggrc.services.common import Resource
 from ggrc.services.registry import service
 from ggrc.utils import benchmark
-from sqlalchemy import and_
-from sqlalchemy import case
-from sqlalchemy import literal
-from sqlalchemy import or_
-from sqlalchemy.orm import aliased
-from sqlalchemy.orm.attributes import get_history
 
 
 blueprint = Blueprint(
@@ -165,15 +166,36 @@ def objects_via_relationships_query(model, roles, user_id, context_not_role):
         (where the user has a listed role) and the corresponding relationships.
   """
   _role = aliased(all_models.Role, name="r")
+  _implications = aliased(all_models.ContextImplication, name="ci")
   _model = aliased(model, name="p")
   _relationship = aliased(all_models.Relationship, name="rl")
   _user_role = aliased(all_models.UserRole, name="ur")
 
   def _join_filter(query, cond):
-    return query.join(_model, cond).\
-        join(_user_role, _model.context_id == _user_role.context_id).\
-        join(_role, _user_role.role_id == _role.id).\
-        filter(and_(_user_role.person_id == user_id, _role.name.in_(roles)))
+    """Filter a query based on user roles
+
+    Args:
+        query (sqlalchemy.orm.query.Query): query to be filtered
+        cond (sqlalchemy.sql.elements.BooleanClauseList): condition used for
+            the initial model query
+
+    Returns:
+        query (sqlalchemy.orm.query.Query): object with applied conditions
+    """
+    user_role_cond = and_(_user_role.person_id == user_id,
+                          _user_role.context_id == _implications.context_id)
+    role_cond = and_(_user_role.role_id == _role.id,
+                     _role.name.in_(roles))
+    return query.join(_model, cond).join(
+        _implications, _model.context_id == _implications.source_context_id).\
+        join(_user_role, user_role_cond).\
+        join(_role, role_cond).\
+        distinct().\
+        union(query.join(_model, cond).join(_implications,
+              _model.context_id == _implications.context_id).
+              join(_user_role, user_role_cond).
+              join(_role, role_cond).
+              distinct())
 
   def _add_relationship_join(query):
     # We do a UNION here because using an OR to JOIN both destination
@@ -242,7 +264,7 @@ def audit_relationship_query(user_id, context_not_role=False):
   """
   return objects_via_relationships_query(
       model=all_models.Audit,
-      roles=('Auditor',),
+      roles=('Auditor', 'ProgramEditor', 'ProgramOwner', 'ProgramReader'),
       user_id=user_id,
       context_not_role=context_not_role
   )
@@ -522,7 +544,10 @@ def load_permissions_for(user):  # noqa
   for res in audit_relationship_query(user.id):
     id_, type_, role_name = res
     actions = ["read", "view_object_page"]
-    if type_ in ("Assessment", "Request"):
+    if role_name == "Auditor":
+      if type_ in ("Assessment", "Request"):
+        actions += ["create", "update", "delete"]
+    if role_name in ("ProgramOwner", "ProgramEditor"):
       actions += ["create", "update", "delete"]
     for action in actions:
       permissions.setdefault(action, {})\
@@ -554,7 +579,37 @@ def load_permissions_for(user):  # noqa
       # the query has executed.
       cache.set(key, permissions, PERMISSION_CACHE_TIMEOUT)
 
+  # add permissions for backlog workflows to everyone
+  actions = ["read", "edit", "update"]
+  _types = ["Workflow", "Cycle", "CycleTaskGroup",
+            "CycleTaskGroupObjectTask", "TaskGroup", "CycleTaskEntry"]
+  for _, _, wf_context_id in backlog_workflows().all():
+    for _type in _types:
+      if _type == "CycleTaskGroupObjectTask":
+        actions += ["delete"]
+      if _type == "CycleTaskEntry":
+        actions += ["create"]
+      for action in actions:
+        permissions.setdefault(action, {})\
+            .setdefault(_type, {})\
+            .setdefault('contexts', list())\
+            .append(wf_context_id)
   return permissions
+
+
+def backlog_workflows():
+  """Creates a query that returns all backlog workflows which
+  all users can access.
+
+    Returns:
+        db.session.query object that selects the following columns:
+            | id | type | context_id |
+  """
+  _workflow = aliased(all_models.Workflow, name="wf")
+  return db.session.query(_workflow.id,
+                          literal("Workflow").label("type"),
+                          _workflow.context_id)\
+                   .filter(_workflow.kind == "Backlog")
 
 
 def _get_or_create_personal_context(user):
@@ -639,8 +694,7 @@ def handle_relationship_post(sender, obj=None, src=None, service=None):
   db.session.add(obj)
   db.session.flush()
 
-  if isinstance(obj.source, Response) \
-     and isinstance(obj.destination, Program) \
+  if isinstance(obj.destination, Program) \
      and obj.destination.private \
      and db.session.query(ContextImplication) \
      .filter(
@@ -674,8 +728,7 @@ def handle_relationship_post(sender, obj=None, src=None, service=None):
 def handle_relationship_delete(sender, obj=None, src=None, service=None):
   db.session.flush()
 
-  if isinstance(obj.source, Response) \
-     and isinstance(obj.destination, Program) \
+  if isinstance(obj.destination, Program) \
      and obj.destination.private:
 
     # figure out if any other responses in this audit

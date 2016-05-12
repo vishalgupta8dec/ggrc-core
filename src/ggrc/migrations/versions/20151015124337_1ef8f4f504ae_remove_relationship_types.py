@@ -6,7 +6,7 @@
 """Remove relationship_types
 
 Revision ID: 1ef8f4f504ae
-Revises: 3c8f204ba7a9
+Revises: 262bbe790f4c
 Create Date: 2015-10-15 12:43:37.846021
 
 """

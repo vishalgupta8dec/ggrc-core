@@ -7,7 +7,7 @@
 """Remove object type table
 
 Revision ID: 37b2a060bdd6
-Revises: 262bbe790f4c
+Revises: 6bed0575a0b
 Create Date: 2016-02-02 16:17:48.928846
 
 """

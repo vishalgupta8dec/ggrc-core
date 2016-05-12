@@ -325,8 +325,8 @@ def get_cycle_task_dict(cycle_task):
   object_titles = []
   # every object should have a title or at least a name like person object
   for related_object in cycle_task.related_objects:
-    object_titles.append(related_object.title or
-                         related_object.name or
+    object_titles.append(getattr(related_object, "title", "") or
+                         getattr(related_object, "name", "") or
                          u"Untitled object")
   # related objects might have been deleted or unmapped,
   # check the revision history

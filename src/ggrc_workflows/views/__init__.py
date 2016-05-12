@@ -91,3 +91,6 @@ def init_extra_views(app_):
   app_.add_url_rule(
       "/admin/start_unstarted_cycles",
       view_func=login_required(start_unstarted_cycles))
+  app_.add_url_rule(
+      "/admin/ensure_backlog_workflow_exists",
+      view_func=Workflow.ensure_backlog_workflow_exists)

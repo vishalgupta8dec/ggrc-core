@@ -8,41 +8,37 @@
 {{#is_allowed 'update' instance context='for'}}
   <div {{#instance}}{{data 'model'}}{{/instance}} {{ (el) -> el.ggrc_controllers_quick_form({instance : el.data("model") }) }}>
 
-  {{#if_in instance.status "Open,In Progress"}}
-    {{#if_helpers '\
-      #if_null' instance._mandatory_comment_msg '\
-      and #if_null' instance._mandatory_attachment_msg}}
+  {{#if_in instance.status "Not Started,In Progress"}}
+    {{#if_null instance._mandatory_msg}}
       {{#if_verifiers_defined instance}}
           <button href="javascript://"
                   class="btn btn-small btn-primary pull-right btn-info-pin-header {{instance._disabled}}"
                   data-name="status"
-                  data-value="Finished">
-            Finish
+                  data-value="Ready for Review">
+            Complete
           </button>
       {{else}}
           <button href="javascript://"
                   class="btn btn-small btn-primary pull-right btn-info-pin-header {{instance._disabled}}"
                   data-name="status"
-                  data-value="Final">
-            Finish
+                  data-value="Completed">
+            Complete
           </button>
       {{/if_verifiers_defined}}
     {{else}}
       <button href="javascript://"
               class="btn btn-small btn-primary pull-right btn-info-pin-header disabled"
               rel="tooltip"
-              title="{{instance._mandatory_comment_msg}}
-                     {{^if_null instance._mandatory_comment_msg}} | {{/if}}
-                     {{instance._mandatory_attachment_msg}}">
-        Finish
+              title="{{instance._mandatory_msg}}">
+        Complete
       </button>
-    {{/if_helpers}}
+    {{/if_null}}
   {{/if_in}}
 
-  {{#if_equals instance.status "Finished"}}
+  {{#if_equals instance.status "Ready for Review"}}
     {{#if_verifier instance}}
       <button href="javascript://" class="btn btn-small btn-success pull-right btn-info-pin-header {{instance._disabled}}" data-name="status" data-value="Verified">Verify</button>
-      <button href="javascript://" class="btn btn-small btn-danger pull-right btn-info-pin-header {{instance._disabled}}" data-name="status" data-value="In Progress">Decline</button>
+      <button href="javascript://" class="btn btn-small btn-danger pull-right btn-info-pin-header {{instance._disabled}}" data-name="status" data-value="In Progress">Reject</button>
     {{/if_verifier}}
   {{/if_equals}}
 

@@ -15,11 +15,18 @@ from ggrc.models import relationship
 
 
 class Assignable(object):
+  """Mixin for models with assignees"""
 
   ASSIGNEE_TYPES = set(["Assignee"])
 
   @property
   def assignees(self):
+    """Property that returns assignees
+
+    Returns:
+        A set of assignees.
+    """
+
     assignees = [(r.source, tuple(r.attrs["AssigneeType"].split(",")))
                  for r in self.related_sources
                  if "AssigneeType" in r.attrs]
@@ -60,6 +67,11 @@ class Assignable(object):
 
   @classmethod
   def _get_relate_filter(cls, predicate, related_type):
+    """Used for filtering by related_assignee.
+
+    Returns:
+        Boolean stating whether such an assignee exists.
+    """
     Rel = relationship.Relationship
     RelAttr = relationship.RelationshipAttr
     Person = person.Person
@@ -75,5 +87,14 @@ class Assignable(object):
     ).filter(and_(
         RelAttr.attr_value.contains(related_type),
         RelAttr.attr_name == "AssigneeType",
+        or_(and_(
+            Rel.source_type == Person.__name__,
+            Rel.destination_type == cls.__name__,
+            Rel.destination_id == cls.id
+        ), and_(
+            Rel.destination_type == Person.__name__,
+            Rel.source_type == cls.__name__,
+            Rel.source_id == cls.id
+        )),
         or_(predicate(Person.name), predicate(Person.email))
     )).exists()

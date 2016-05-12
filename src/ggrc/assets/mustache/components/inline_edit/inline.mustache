@@ -1,0 +1,41 @@
+{{!
+  Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+  Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+  Created By: ivan@reciprocitylabs.com
+  Maintained By: ivan@reciprocitylabs.com
+}}
+
+<div class="inline-edit {{#if context.isEdit}}inline-edit--active{{/if}}">
+  <h6 class="inline-edit__title">{{firstnonempty title label}}</h6>
+
+  <spinner toggle="isSave"></spinner>
+  {{^if isSave}}
+  <div class="inline-edit__content">
+    {{#switch type}}
+      {{#case 'checkbox'}}
+        <inline-checkbox context="context"></inline-checkbox>
+      {{/case}}
+      {{#case 'input'}}
+        <inline-input context="context"></inline-input>
+      {{/case}}
+      {{#case 'text'}}
+        <inline-text context="context"></inline-text>
+      {{/case}}
+      {{#case 'dropdown'}}
+        <inline-dropdown context="context"></inline-dropdown>
+      {{/case}}
+      {{#default}}
+        <content></content>
+      {{/default}}
+    {{/switch}}
+    <ul class="inline-edit__controls {{#if context.isEdit}}inline-edit__controls--edit-mode{{/if}}">
+      {{#if context.isEdit}}
+      <li><a can-click="onSave" href="#"><i class="fa fa-check"></i></a></li>
+      <li><a can-click="onCancel" href="#"><i class="fa fa-times"></i></a></li>
+      {{else}}
+      <li><a can-click="enableEdit" href="#"><i class="fa fa-pencil"></i></a></li>
+      {{/if}}
+    </ul>
+  </div>
+  {{/if}}
+</div>

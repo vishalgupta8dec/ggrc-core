@@ -218,12 +218,16 @@
                   </li>
                 </ul>
               </div>
-              <div class="new-attr-list">
+              <div class="sortable-list new-attr-list">
                 <ul>
-                  <add-template-field fields="fields">
-                  </add-template-field>
+                  <li class="row-fluid add-field">
+                    <add-template-field fields="fields">
+                    </add-template-field>
+                  </li>
                   {{#fields}}
+                  <li {{data 'field'}} class="row-fluid sortable-item">
                     <template-filed field="." fields="fields"></template-filed>
+                  </li>
                   {{/fields}}
                 </ul>
               </div>

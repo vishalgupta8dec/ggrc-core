@@ -53,10 +53,6 @@ from ggrc.models.project import Project
 from ggrc.models.relationship import Relationship
 from ggrc.models.relationship import RelationshipAttr
 from ggrc.models.request import Request
-from ggrc.models.response import DocumentationResponse
-from ggrc.models.response import InterviewResponse
-from ggrc.models.response import PopulationSampleResponse
-from ggrc.models.response import Response
 from ggrc.models.revision import Revision
 from ggrc.models.section import Section
 from ggrc.models.system import Process
@@ -104,10 +100,6 @@ all_models = [
     Relationship,
     RelationshipAttr,
     Request,
-    Response,
-    DocumentationResponse,
-    InterviewResponse,
-    PopulationSampleResponse,
     Section,
     Clause,
     SystemOrProcess,

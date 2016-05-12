@@ -11,7 +11,7 @@
   {{> /static/mustache/base_objects/form_restore.mustache}}
 
   {{^if new_object_form}}
-    {{#if_in instance.status "Open,Final,Verified"}}
+    {{#if_in instance.status "Not Started,Completed,Verified"}}
       <div class="alert warning">
         <i class="fa fa-exclamation-triangle red"></i>
         You are about to move request from "{{instance.status}}" to "In Progress".
@@ -70,12 +70,12 @@
       <div class="row-fluid">
         <div class="span6">
           <label>
-            Requested On
+            Starts On
             <span class="required">*</span>
           </label>
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            <input tabindex="4" class="input-block-level date" name="requested_on" data-toggle="datepicker" data-before="due_on" placeholder="MM/DD/YYYY" type="text" value="{{localize_date requested_on}}">
+            <input tabindex="4" class="input-block-level date" name="start_date" data-toggle="datepicker" data-before="end_date" placeholder="MM/DD/YYYY" type="text" value="{{localize_date start_date}}">
           </div>
         </div>
         <div class="span6">
@@ -85,7 +85,7 @@
           </label>
           <div class="input-group">
             <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-            <input tabindex="5" class="input-block-level date" name="due_on" data-toggle="datepicker" data-after="requested_on" placeholder="MM/DD/YYYY" type="text" value="{{localize_date due_on}}">
+            <input tabindex="5" class="input-block-level date" name="end_date" data-toggle="datepicker" data-after="start_date" placeholder="MM/DD/YYYY" type="text" value="{{localize_date end_date}}">
           </div>
         </div>
       </div>
@@ -105,19 +105,42 @@
           <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
         </label>
         {{#prune_context}}
+          <ul class="tree-structure new-tree mapped-objects-tree">
           {{#each list}}
-          <div class="oneline">
-            <a href="javascript://" class="unmap" data-toggle="unmap">
-              <span class="result" {{data 'result'}}></span>
-              <i class="fa fa-trash"></i>
-            </a>
-            {{#update_link .}}
-              <a class="url" href="{{schemed_url link}}" target="_blank">
-                {{firstexist title name email link}}
-              </a>
-            {{/update_link}}
-          </div>
+            <li class="tree-item task-item" data-object-type="{{class.table_singular}}"
+              {{#instance}}{{ data 'option' }}{{/instance}} data-id="{{ id }}">
+              <div class="item-main">
+                <div class="item-wrap">
+                  <div class="select">
+                    <div class="item-data">
+                      <div class="row-fluid">
+                        <div class="span10">
+                          <div class="tree-title-area">
+                            {{#update_link .}}
+                              <a class="url" href="{{schemed_url link}}" target="_blank">
+                                <i class="fa fa-{{class.table_singular}} color"></i>
+                                {{firstexist title name email link}}
+                              </a>
+                            {{/update_link}}
+                          </div>
+                        </div> <!-- span10 end -->
+
+                        <div class="span2">
+                          <div class="show-details">
+                            <a href="javascript://" class="unmap" data-toggle="unmap">
+                              <span class="result" {{data 'result'}}></span>
+                              <i class="fa fa-trash"></i>
+                            </a>
+                          </div>
+                        </div> <!-- span2 end -->
+                      </div> <!-- row-fluid end -->
+                    </div> <!-- item-data end -->
+                  </div> <!-- select end -->
+                </div> <!-- item-wrap end -->
+              </div> <!-- item-main end -->
+            </li>
           {{/each}}
+        </ul>
         {{/prune_context}}
         {{^list.length}}
           <span class="gray"><em>No mapped objects</em></span>

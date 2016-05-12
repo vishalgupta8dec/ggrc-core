@@ -58,13 +58,56 @@
       </div>
     </div>
 
+
     <div class="span6 hide-wrap hidable">
-      <people-list instance="instance" editable="true" deferred="true" validate="true"></people-list>
-    </div>
-    </div>
+      <div class="row-fluid inner-hide wrap-row">
+        <div class="span12 hidable">
+          <people-list instance="instance" editable="true" deferred="true" validate="true"></people-list>
+        </div>
+      </div>
 
+      <div class="row-fluid inner-hide">
+        <div class="span12 hidable">
+          <div class="comment-notification">
+            <label>
+              <input type="checkbox" 
+                     name="send_by_default"
+                     {{# send_by_default}}checked{{/send_by_default}}>
+              Enable notifications on comments
+            </label>
+            <ul class="comment-notification__list">
+              <li>
+								<label class="input--inline">
+                  <input type="checkbox" 
+                        name="Creator"
+                        {{# Creator}}checked{{/Creator}}>
+                  Notify creator(s)
+								</label>
+              </li>
+              <li>
+								<label class="input--inline">
+                  <input type="checkbox" 
+                        name="Assessor"
+                        {{# Assessor}}checked{{/Assessor}}>
+                  Notify assessor(s)
+								</label>
+              </li>
+              <li>
+								<label class="input--inline">
+                  <input type="checkbox" 
+                        name="Verifier"
+                        {{# Verifier}}checked{{/Verifier}}>
+                  Notify verifier(s)
+								</label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <div class="row-fluid">
+  <div class="row-fluid">
     <div data-id="test_plan_hidden" class="span6 hidable">
       <label>
         Test Plan

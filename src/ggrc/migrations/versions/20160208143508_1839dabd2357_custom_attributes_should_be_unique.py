@@ -9,7 +9,7 @@
 """Custom attributes should be unique
 
 Revision ID: 1839dabd2357
-Revises: 46a791604e98
+Revises: 4e989ef86619
 Create Date: 2015-12-07 15:33:08.728216
 
 """

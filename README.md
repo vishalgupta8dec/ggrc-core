@@ -25,24 +25,52 @@ Migrated from [Google](https://code.google.com/archive/p/compliance-management)
 The following software is required to stand up a GGRC-Core development
 environment:
 
+|               Prerequisite                       |                 Description              |
+|--------------------------------------------------|------------------------------------------|
+|[Docker](https://www.docker.com/)                 | Container management tool                |
+|[Docker compose](https://docs.docker.com/compose/)| A tool for defining multi-container apps |
+
+**NOTE for Windows/OSX users:** The easiest way of getting docker is by installing the
+[docker toolbox](https://www.docker.com/products/docker-toolbox).
+
+Or alternatively with our legacy vagrant environemnt:
+
 |               Prerequisite               |               Description                |
 |------------------------------------------|------------------------------------------|
 |[VirtualBox](https://www.virtualbox.org/) | Oracle VirtualBox Virtual Machine player |
 |[Vagrant](https://www.vagrantup.com/)      | Handy scriptable VM management           |
 |[Ansible](https://www.ansible.com/)    | Provisioning and deployment tool         |
 
-Or alternatively (see Quickstart with docker)
-
-|               Prerequisite                       |                 Description              |
-|--------------------------------------------------|------------------------------------------|
-|[Docker](https://www.docker.com/)                 | Container management tool                |
-|[Docker compose](https://docs.docker.com/compose/)| A tool for defining multi-container apps |
-
-
-## Quick Start
+## Quick Start with Docker
 
 Getting started with GGRC-Core development should be fast and easy once you
-have the prerequisite software installed. Here are the steps:
+have docker up and running. Here are the steps:
+
+**NOTE for Windows/OSX users:** Make sure `docker` is up and running by following the [windows guide](https://docs.docker.com/engine/installation/windows/#using-docker-from-windows-command-prompt-cmd-exe) / [osx guide](https://docs.docker.com/engine/installation/mac/#from-your-shell).
+
+* clone the repo
+* cd to the project
+directory
+* run the following:
+
+    ```
+    git submodule update --init
+    docker-compose up -d
+    docker exec -it ggrccore_dev_1 su vagrant
+    make bower_components
+    build_css
+    build_assets
+    db_reset
+    ```
+
+If you see download errors during the `docker-compose up -d` stage, or if any subsequent
+step fails, try running `docker-compose build` (See [Reprovisioning a Docker container](#reprovisioning-a-docker-container) below for more).
+
+_NOTE: Because docker shared volumes do not have permission mappings, you should run these commands as a user with UID 1000, to match the users inside the containers._
+
+## Quick Start with Vagrant (legacy)
+
+Alternative setup is using vagrant
 
 * clone the repo
 * cd to the project directory
@@ -65,31 +93,6 @@ VM](#provision-a-running-vagrant-vm) below for more).
 
 Now you're in the VM and ready to rock. Get to work!
 
-## Quickstart with docker
-
-Alternative setup is using just docker. Run a vagrant-like fat docker container
-named *ggrccore_dev_1*.
-
-
-* clone the repo
-* cd to the project
-directory
-* run the following:
-
-    ```
-    git submodule update --init
-    docker-compose up -d
-    docker exec -it ggrccore_dev_1 su vagrant
-    make bower_components
-    build_css
-    build_assets
-    db_reset
-    ```
-
-If you see download errors during the `docker-compose up -d` stage, or if any subsequent
-step fails, try running `docker-compose build` (See [Reprovisioning a Docker container](#reprovisioning-a-docker-container) below for more).
-
-_NOTE: Because docker shared volumes do not have permission mappings, you should run these commands as a user with UID 1000, to match the users inside the containers._
 
 ### Launching GGRC as Stand-alone Flask
 

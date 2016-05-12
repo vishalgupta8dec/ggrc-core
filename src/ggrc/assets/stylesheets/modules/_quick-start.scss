@@ -5,81 +5,87 @@
  * Maintained By: vladan@reciprocitylabs.com
  */
 
-.widget {
-  &.bare {
-    .content {
-      @include box-shadow(none);
-      background: transparent;
-      padding-left: 0;
-      padding-right: 0;
-    }
-    .header {
-      margin: 6px 0 4px;
-    }
-  }
-}
-
-.quick-list {
-  @extend %reset-list;
-  li {
-    margin-bottom: 5px;
-    position: relative;
-    &.top-space {
-      margin-top: 15px;
-    }
-    &:last-child {
+&.get-started {
+  &__header {
+    margin: 6px 0 4px;
+    h2 {
+      @extend %oneline;
+      font-size: 18px;
+      line-height: 27px;
+      color: $black;
       margin-bottom: 0;
+      font-weight: normal;
+      font-family: $fontTitle;
     }
   }
-  .fa {
-    margin: 6px 0 0 0;
+  &__content {
+    @include box-shadow(none);
+    background: transparent;
+    padding-left: 0;
+    padding-right: 0;
   }
-  a {
-    @include box-shadow(0 2px 2px -1px rgba(0,0,0, 0.3));
-    @include transition (background 0.2s ease, color 0.2s ease);
-    font-size: 16px;
-    line-height: 35px;
-    height: 35px;
-    display: block;
-    background: $white;
-    &:hover {
-      text-decoration: none;
-      background: $blue;
-      color: $white;
-    }
-  }
-  .icon-wrap {
-    display: inline-block;
-    line-height: 35px;
-    height: 35px;
-    width: 35px;
-    text-align: center;
-    background: $blue;
-    margin-right: 5px;
-    vertical-align: top;
-    i {
-      margin-top: 9px;
-    }
-  }
-  .dropdown-menu {
-    a {
-      @include transition(color 0.2s ease);
-      @include border-radius(0);
-      @include box-shadow(none);
-      padding: 0 14px 0 10px;
-      display: block;
-      line-height: 29px;
-      font-size: 13px;
-      color: $gray;
-      text-transform: none;
-      background: $white;
-      i {
-        @include opacity(0.4);
+  &__list {
+    @extend %reset-list;
+    &__item {
+      margin-bottom: 5px;
+      position: relative;
+      &--top-space {
+        margin-top: 15px;
       }
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    .fa {
+      margin: 6px 0 0 0;
+    }
+    a {
+      @include box-shadow(0 2px 2px -1px rgba(0,0,0, 0.3));
+      @include transition (background 0.2s ease, color 0.2s ease);
+      font-size: 16px;
+      line-height: 35px;
+      height: 35px;
+      display: block;
+      background: $white;
       &:hover {
-        color: $black;
+        text-decoration: none;
+        background: $blue;
+        color: $white;
+      }
+    }
+    &__icon-wrap {
+      display: inline-block;
+      line-height: 35px;
+      height: 35px;
+      width: 35px;
+      text-align: center;
+      background: $blue;
+      margin-right: 5px;
+      vertical-align: top;
+      i {
+        margin-top: 9px;
+      }
+    }
+    .dropdown-menu {
+      a {
+        @include transition(color 0.2s ease);
+        @include border-radius(0);
+        @include box-shadow(none);
+        padding: 0 14px 0 10px;
+        display: block;
+        line-height: 29px;
+        font-size: 13px;
+        color: $gray;
+        text-transform: none;
+        background: $white;
         i {
-          @include opacity(1);
+          @include opacity(0.4);
+        }
+        &:hover {
+          color: $black;
+          i {
+            @include opacity(1);
+          }
         }
       }
     }

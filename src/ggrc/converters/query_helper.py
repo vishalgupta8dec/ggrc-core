@@ -3,6 +3,8 @@
 # Created By: miha@reciprocitylabs.com
 # Maintained By: miha@reciprocitylabs.com
 
+# flake8: noqa
+
 import datetime
 import collections
 from sqlalchemy import and_
@@ -207,7 +209,7 @@ class QueryHelper(object):
       key, _ = self.attr_name_map[object_class].get(o_key, (o_key, None))
       # handle dates
       if ("date" in key and "relative" not in key) or \
-         key in ["due_on", "requested_on"]:
+         key in ["end_date", "start_date"]:
         if isinstance(value, datetime.date):
           return value
         try:

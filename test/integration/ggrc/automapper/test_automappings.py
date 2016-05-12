@@ -324,9 +324,9 @@ class TestAutomappings(integration.ggrc.TestCase):
         'title': make_name('Request'),
         'assignee': {'id': creator.id},
         'request_type': 'documentation',
-        'status': 'Open',
-        'requested_on': '1/1/2015',
-        'due_on': '1/1/2016',
+        'status': 'Not Started',
+        'start_date': '1/1/2015',
+        'end_date': '1/1/2016',
     })
     self.assert_mapping(request, program)
     self.assert_mapping(request, audit, missing=True)

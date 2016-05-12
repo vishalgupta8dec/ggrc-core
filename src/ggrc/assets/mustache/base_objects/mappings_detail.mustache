@@ -22,11 +22,7 @@
       {{/using}}
     {{/if}}
     {{else}}
-    {{#if_instance_of binding.instance 'Response'}}
-    a <b>{{binding.instance.class.title_singular}}</b> in <i class="fa fa-audit-color"></i><b>{{#using request=binding.instance.request}}{{#using audit=request.audit}}{{audit.title}}{{/using}}{{/using}}</b>{{#if isLast}}.{{else}},{{/if}}
-    {{else}}
     <i class="fa fa-{{binding.instance.class.table_singular}} color"></i><b href="{{link_to_tree binding.instance}}">{{binding.instance.title}}</b>{{#if isLast}}.{{else}},{{/if}}
-    {{/if_instance_of}}
     {{/if_instance_of}}
     {{/if_equals}}
   {{/each_with_extras_as}}

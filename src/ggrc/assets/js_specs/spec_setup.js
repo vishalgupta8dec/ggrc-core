@@ -91,9 +91,6 @@ GGRC.Bootstrap = {
     "title_plural": "Requests",
     "model_singular": "Request"
   }, {
-    "title_plural": "Responses",
-    "model_singular": "Response"
-  }, {
     "title_plural": "Risk Assessments",
     "model_singular": "RiskAssessment"
   }, {
@@ -175,9 +172,6 @@ GGRC.Bootstrap = {
   }, {
     "title_plural": "Requests",
     "model_singular": "Request"
-  }, {
-    "title_plural": "Responses",
-    "model_singular": "Response"
   }, {
     "title_plural": "Risk Assessments",
     "model_singular": "RiskAssessment"

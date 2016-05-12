@@ -50,7 +50,7 @@ for type_ in WORKFLOW_OBJECT_TYPES:
   model.late_init_task_groupable()
 
 
-def get_public_config(current_user):
+def get_public_config(current_user):  # noqa
   """Expose additional permissions-dependent config to client.
   """
   return {}
@@ -74,7 +74,7 @@ def contributed_services():
 
 
 def contributed_object_views():
-  from . import models
+  """Contributed object views"""
   from ggrc.views.registry import object_view
 
   return [
@@ -151,11 +151,16 @@ def update_cycle_dates(cycle):
                 .joinedload('cycle_task_group_tasks')
                 ).one()
 
-  if not cycle.cycle_task_group_object_tasks:
+  if not cycle.cycle_task_group_object_tasks and \
+     cycle.workflow.kind != "Backlog":
     cycle.start_date, cycle.end_date = None, None
     cycle.next_due_date = None
     cycle.is_current = False
     db.session.add(cycle)
+    return
+
+  # Don't update cycle and cycle task group dates for backlog workflows
+  if cycle.workflow.kind == "Backlog":
     return
 
   for ctg in cycle.cycle_task_groups:
@@ -169,7 +174,7 @@ def update_cycle_dates(cycle):
 
 
 @Resource.model_posted.connect_via(models.Cycle)
-def handle_cycle_post(sender, obj=None, src=None, service=None):
+def handle_cycle_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if src.get('autogenerate', False):
     # When called via a REST POST, use current user.
     current_user = get_current_user()
@@ -189,6 +194,7 @@ def handle_cycle_post(sender, obj=None, src=None, service=None):
 
 def _create_cycle_task(task_group_task, cycle, cycle_task_group,
                        current_user, base_date=None):
+  """Create a cycle task along with relations to other objects"""
   # TaskGroupTasks for one_time workflows don't save relative start/end
   # month/day. They only saves start and end dates.
   # TaskGroupTasks for all other workflow frequencies save the relative
@@ -224,6 +230,9 @@ def _create_cycle_task(task_group_task, cycle, cycle_task_group,
 
 def create_old_style_cycle(cycle, task_group, cycle_task_group, current_user,
                            base_date):
+  """ This function preserves the old style of creating cycles, so each object
+  gets its own task assigned to it.
+  """
   if len(task_group.task_group_objects) == 0:
     for task_group_task in task_group.task_group_tasks:
       cycle_task_group_object_task = _create_cycle_task(
@@ -241,6 +250,8 @@ def create_old_style_cycle(cycle, task_group, cycle_task_group, current_user,
 
 
 def build_cycle(cycle, current_user=None, base_date=None):
+  """Build a cycle with it's child objects"""
+
   if not base_date:
     base_date = date.today()
 
@@ -339,6 +350,8 @@ def update_cycle_task_child_state(obj):
 
 
 def update_cycle_task_parent_state(obj):  # noqa
+  """Propagate changes to obj's parents"""
+
   parent_attrs = _cycle_task_parent_attr.get(type(obj), [])
   for parent_attr in parent_attrs:
     if not parent_attr:
@@ -346,6 +359,11 @@ def update_cycle_task_parent_state(obj):  # noqa
 
     parent = getattr(obj, parent_attr, None)
     if not parent:
+      continue
+
+    # Don't propagate changes to CycleTaskGroup if it's a part of backlog wf
+    if isinstance(parent, models.CycleTaskGroup) \
+       and parent.cycle.workflow.kind == "Backlog":
       continue
 
     # If any child is `InProgress`, then parent should be `InProgress`
@@ -403,6 +421,8 @@ def update_cycle_task_parent_state(obj):  # noqa
 
 
 def ensure_assignee_is_workflow_member(workflow, assignee):
+  """Checks what role assignee has in the context of
+  a workflow. If he has none he gets the Workflow Member role."""
   if not assignee:
     return
 
@@ -435,7 +455,7 @@ def ensure_assignee_is_workflow_member(workflow, assignee):
 
 
 @Resource.model_put.connect_via(models.TaskGroupTask)
-def handle_task_group_task_put(sender, obj=None, src=None, service=None):
+def handle_task_group_task_put(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.contact.history.has_changes():
     ensure_assignee_is_workflow_member(obj.task_group.workflow, obj.contact)
 
@@ -451,25 +471,25 @@ def handle_task_group_task_put(sender, obj=None, src=None, service=None):
 
 
 @Resource.model_posted.connect_via(models.TaskGroupTask)
-def handle_task_group_task_post(sender, obj=None, src=None, service=None):
+def handle_task_group_task_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   ensure_assignee_is_workflow_member(obj.task_group.workflow, obj.contact)
   update_workflow_state(obj.task_group.workflow)
 
 
 @Resource.model_deleted.connect_via(models.TaskGroupTask)
-def handle_task_group_task_delete(sender, obj=None, src=None, service=None):
+def handle_task_group_task_delete(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
   update_workflow_state(obj.task_group.workflow)
 
 
 @Resource.model_put.connect_via(models.TaskGroup)
-def handle_task_group_put(sender, obj=None, src=None, service=None):
+def handle_task_group_put(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.contact.history.has_changes():
     ensure_assignee_is_workflow_member(obj.workflow, obj.contact)
 
 
 @Resource.model_posted.connect_via(models.TaskGroup)
-def handle_task_group_post(sender, obj=None, src=None, service=None):
+def handle_task_group_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   source_task_group = None
 
   if src.get('clone'):
@@ -493,7 +513,7 @@ def handle_task_group_post(sender, obj=None, src=None, service=None):
 
 
 @Resource.model_deleted.connect_via(models.TaskGroup)
-def handle_task_group_delete(sender, obj=None, src=None, service=None):
+def handle_task_group_delete(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
   update_workflow_state(obj.workflow)
 
@@ -509,14 +529,14 @@ def set_internal_object_state(task_group_object, object_state, status):
 
 @Resource.model_deleted.connect_via(models.CycleTaskGroupObjectTask)
 def handle_cycle_task_group_object_task_delete(sender, obj=None,
-                                               src=None, service=None):
+                                               src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
   update_cycle_dates(obj.cycle)
 
 
 @Resource.model_put.connect_via(models.CycleTaskGroupObjectTask)
 def handle_cycle_task_group_object_task_put(
-        sender, obj=None, src=None, service=None):
+        sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
 
   if inspect(obj).attrs.contact.history.has_changes():
     ensure_assignee_is_workflow_member(obj.cycle.workflow, obj.contact)
@@ -540,7 +560,7 @@ def handle_cycle_task_group_object_task_put(
   # Doing this regardless of status.history.has_changes() is important in order
   # to update objects that have been declined. It updates the os_last_updated
   # date and last_updated_by via the call to set_internal_object_state.
-  if obj.task_group_task.object_approval:
+  if getattr(obj.task_group_task, 'object_approval', None):
     os_state = None
     status = None
     if obj.status == 'Verified':
@@ -564,9 +584,27 @@ def handle_cycle_task_group_object_task_put(
     db.session.flush()
 
 
+@Resource.model_posted.connect_via(models.CycleTaskGroupObjectTask)
+def handle_cycle_task_group_object_task_post(
+        sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
+
+  if obj.cycle.workflow.kind != "Backlog":
+    ensure_assignee_is_workflow_member(obj.cycle.workflow, obj.contact)
+  update_cycle_dates(obj.cycle)
+
+  Signals.status_change.send(
+      obj.__class__,
+      obj=obj,
+      new_status=obj.status,
+      old_status=None,
+  )
+  update_cycle_task_parent_state(obj)
+  db.session.flush()
+
+
 @Resource.model_put.connect_via(models.CycleTaskGroup)
 def handle_cycle_task_group_put(
-        sender, obj=None, src=None, service=None):
+        sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.status.history.has_changes():
     update_cycle_task_parent_state(obj)
     update_cycle_task_child_state(obj)
@@ -628,7 +666,7 @@ def update_workflow_state(workflow):
 
 @Resource.model_put.connect_via(models.Cycle)
 def handle_cycle_put(
-        sender, obj=None, src=None, service=None):
+        sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.is_current.history.has_changes():
     update_workflow_state(obj.workflow)
 
@@ -637,13 +675,13 @@ def handle_cycle_put(
 
 @Resource.model_put.connect_via(models.Workflow)
 def handle_workflow_put(
-        sender, obj=None, src=None, service=None):
+        sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument  # noqa pylint: disable=unused-argument
   update_workflow_state(obj)
 
 
 @Resource.model_posted.connect_via(models.CycleTaskEntry)
 def handle_cycle_task_entry_post(
-        sender, obj=None, src=None, service=None):
+        sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   if src['is_declining_review'] == '1':
     task = obj.cycle_task_group_object_task
     task.status = 'Declined'
@@ -655,8 +693,8 @@ def handle_cycle_task_entry_post(
 
 
 @Signals.status_change.connect_via(models.Cycle)
-def handle_cycle_status_change(sender, obj=None, new_status=None,
-                               old_status=None):
+def handle_cycle_status_change(sender, obj=None, new_status=None,  # noqa pylint: disable=unused-argument
+                               old_status=None):  # noqa pylint: disable=unused-argument  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.status.history.has_changes():
     if obj.status == 'Verified':
       obj.is_current = False
@@ -665,8 +703,8 @@ def handle_cycle_status_change(sender, obj=None, new_status=None,
 
 
 @Signals.status_change.connect_via(models.CycleTaskGroupObjectTask)
-def handle_cycle_task_status_change(sender, obj=None, new_status=None,
-                                    old_status=None):
+def handle_cycle_task_status_change(sender, obj=None, new_status=None,  # noqa pylint: disable=unused-argument
+                                    old_status=None):  # noqa pylint: disable=unused-argument
   if inspect(obj).attrs.status.history.has_changes():
     if new_status == 'Verified':
       obj.verified_date = datetime.now()
@@ -695,7 +733,7 @@ def _find_role(role_name):
 
 
 @Resource.model_posted.connect_via(models.WorkflowPerson)
-def handle_workflow_person_post(sender, obj=None, src=None, service=None):
+def handle_workflow_person_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   db.session.flush()
 
   # add a user_roles mapping assigning the user creating the workflow
@@ -711,7 +749,7 @@ def handle_workflow_person_post(sender, obj=None, src=None, service=None):
 
 
 @Resource.model_posted.connect_via(models.Workflow)
-def handle_workflow_post(sender, obj=None, src=None, service=None):
+def handle_workflow_post(sender, obj=None, src=None, service=None):  # noqa pylint: disable=unused-argument
   source_workflow = None
 
   if src.get('clone'):
@@ -916,12 +954,14 @@ def adjust_next_cycle_start_date(
       if last_cycle_start_date >= first_task_reified:
         last_cycle_start_date = last_cycle_start_date + calculator.time_delta
 
-      workflow.non_adjusted_next_cycle_start_date = \
-          calculator.relative_day_to_date(
-              relative_day=first_task.relative_start_day,
-              relative_month=first_task.relative_start_month,
-              base_date=last_cycle_start_date
-          )
+      result = calculator.relative_day_to_date(
+          relative_day=first_task.relative_start_day,
+          relative_month=first_task.relative_start_month,
+          base_date=last_cycle_start_date
+      )
+      if isinstance(result, datetime):
+        result = result.date()
+      workflow.non_adjusted_next_cycle_start_date = result
 
   # Unless we are moving forward one interval we just want to recalculate
   # the next_cycle_start_date to reflect the latest changes to the
@@ -955,16 +995,18 @@ class WorkflowRoleContributions(RoleContributions):
           'create': ['Workflow'],
       },
       'Creator': {
-          'read': [],
-          'create': ['Workflow'],
+          'create': ['Workflow', 'CycleTaskGroupObjectTask']
       },
       'Editor': {
-          'read': ['Workflow'],
-          'create': ['Workflow'],
+          'read': ['Workflow', 'CycleTaskGroupObjectTask'],
+          'create': ['Workflow', 'CycleTaskGroupObjectTask'],
+          'update': ['CycleTaskGroupObjectTask'],
+          'edit': ['CycleTaskGroupObjectTask'],
+          'delete': ['CycleTaskGroupObjectTask']
       },
       'Reader': {
-          'read': ['Workflow'],
-          'create': ['Workflow'],
+          'read': ['Workflow', 'CycleTaskGroupObjectTask'],
+          'create': ['Workflow', 'CycleTaskGroupObjectTask'],
       },
       'ProgramEditor': {
           'read': ['Workflow'],

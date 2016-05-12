@@ -82,5 +82,5 @@ DELETE_CASCADE_ERROR = (u"Line {line}: Cannot delete object {object_type}:"
 
 UNKNOWN_ERROR = "Line {line}: Import failed due to unknown error."
 
-REQUEST_INVALID_STATE = ("LINE {line}: Can not set Request state to Final or "
-                         "Verified via imports.")
+REQUEST_INVALID_STATE = ("LINE {line}: Can not set Request state to Completed "
+                         "or Verified via imports.")

@@ -7,19 +7,21 @@
 
 {{#instance}}   
 <!--p class="oneline"-->
-  Owned by: 
-  {{#with_mapping 'authorizations' instance}}
-    {{#each authorizations}}
-    <span>
-      {{#using role=instance.role}}
-        {{#if_equals role.name 'WorkflowOwner'}}
-          {{#using contact=instance.person}}
-            {{{renderLive '/static/mustache/people/popover.mustache' person=contact}}}
-          {{/using}}
-        {{/if_equals}}
-      {{/using}}
-    </span>
-    {{/each}}
-  {{/with_mapping}}
-<!--/p-->  
+  {{^if_equals instance.kind "Backlog"}}
+    Owned by: 
+    {{#with_mapping 'authorizations' instance}}
+      {{#each authorizations}}
+      <span>
+        {{#using role=instance.role}}
+          {{#if_equals role.name 'WorkflowOwner'}}
+            {{#using contact=instance.person}}
+              {{{renderLive '/static/mustache/people/popover.mustache' person=contact}}}
+            {{/using}}
+          {{/if_equals}}
+        {{/using}}
+      </span>
+      {{/each}}
+    {{/with_mapping}}
+  {{/if_equals}}
+<!--/p-->
 {{/instance}}

@@ -246,10 +246,7 @@
           //, Contract: false
         },
         all: {
-          Document: false,
-          DocumentationResponse: false,
-          InterviewResponse: false,
-          PopulationSampleResponse: false
+          Document: false
         }
       },
       related_objects_child_options = {

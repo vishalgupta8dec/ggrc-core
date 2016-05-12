@@ -65,14 +65,20 @@
       padding: 0 12px 0 70px;
       font-size: 11px;
       text-transform: uppercase;
-      margin: 0 0 4px 0;
-      height: 20px;
+      height: 24px;
       top: 42px;
       background: #e0e0e0;
+      [class^="span"] {
+        line-height: 24px;
+        height: 24px;
+      }
+
       &.no-filter {
         top: 0px;
       }
       .tree-action-list {
+        height: 22px;
+        margin-top: 2px;
         .open {
           .fa-share-alt {
             @include opacity(1);
@@ -89,7 +95,7 @@
         li {
           position: relative;
           overflow: visible;
-          line-height: 28px;
+          line-height: 24px;
           .counter {
             @include opacity(1);
           }

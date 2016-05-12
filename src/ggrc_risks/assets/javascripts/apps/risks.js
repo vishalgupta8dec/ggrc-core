@@ -15,7 +15,7 @@
       "Objective", "Control", "Section", "Clause", "System", "Process",
       "DataAsset", "Facility", "Market", "Product", "Project",
       "MultitypeSearch", "Issue", "Assessment", "AccessGroup", "Request",
-      "Person", "OrgGroup", "Vendor"
+      "Person", "OrgGroup", "Vendor", "Workflow"
     ],
     related_object_descriptors = {},
     threat_descriptor, risk_descriptor;
@@ -81,7 +81,8 @@
         related_requests: TypeFilter("related_objects", "Request"),
         related_people: TypeFilter("related_objects", "Person"),
         related_org_groups: TypeFilter("related_objects", "OrgGroup"),
-        related_vendors: TypeFilter("related_objects", "Vendor")
+        related_vendors: TypeFilter("related_objects", "Vendor"),
+        related_workflows: TypeFilter("related_objects", "Workflow")
 
       },
       related_risk: {
@@ -111,7 +112,13 @@
       Person: {
         owned_risks: Indirect("Risk", "contact"),
         owned_threats: Indirect("Threat", "contact"),
-      },
+        all_risks: Search(function (binding) {
+          return CMS.Models.Risk.findAll({});
+        }),
+        all_threats: Search(function (binding) {
+          return CMS.Models.Threat.findAll({});
+        })
+      }
     };
 
     can.each(_risk_object_types, function (type) {
@@ -137,7 +144,9 @@
           var model = CMS.Models[type] || {};
           return model.title_plural || type;
         });
-
+    if (/^\/objectBrowser\/?$/.test(window.location.pathname)) {
+      related_or_owned = 'all_';
+    }
     // Init widget descriptors:
     can.each(sorted_widget_types, function (model_name) {
       var widgets_by_type = GGRC.tree_view.base_widgets_by_type,

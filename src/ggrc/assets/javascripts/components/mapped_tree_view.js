@@ -12,7 +12,17 @@
     scope: {
       reusable: '@',
       reuseMethod: '@',
-      treeViewClass: '@'
+      treeViewClass: '@',
+      expandable: '@',
+      isExpandable: function () {
+        var expandable = this.attr('expandable');
+        if (expandable === null || expandable === undefined) {
+          return true;
+        } else if (typeof expandable === 'string') {
+          return expandable === 'true';
+        }
+        return expandable;
+      }
     },
     events: {
       '[data-toggle=unmap] click': function (el, ev) {

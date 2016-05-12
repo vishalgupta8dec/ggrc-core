@@ -46,3 +46,13 @@ class TestDataHandler(TestCase):
     task_dict = get_cycle_task_dict(cycle_task)
     self.assertEqual(task_dict["related_objects"][0],
                      u"Contract1 [removed from task]")
+
+    # Test if we handle the title of the object being empty
+    contract = ContractFactory(title=u"")
+    cycle_task = CycleTaskFactory(title=u"task1")
+    relationship = RelationshipFactory(source=contract,
+                                       destination=cycle_task)
+
+    task_dict = get_cycle_task_dict(cycle_task)
+    self.assertEqual(task_dict["related_objects"][0],
+                     u"Untitled object")

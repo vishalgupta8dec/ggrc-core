@@ -1,7 +1,7 @@
 """Add connected objects to revisions
 
 Revision ID: 4e989ef86619
-Revises: 262bbe790f4c
+Revises: 37b2a060bdd6
 Create Date: 2016-01-28 11:15:12.300329
 
 """

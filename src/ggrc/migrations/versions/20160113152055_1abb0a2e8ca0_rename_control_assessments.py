@@ -6,7 +6,7 @@
 """Rename control_assessments to assessments
 
 Revision ID: 1abb0a2e8ca0
-Revises: 5410607088f9
+Revises: 4003827b3d48
 Create Date: 2016-01-13 15:20:55.866368
 
 """

@@ -192,7 +192,7 @@ class RelationshipAttr(Identifiable, db.Model):
   __tablename__ = 'relationship_attrs'
   relationship_id = db.Column(
       db.Integer,
-      db.ForeignKey('relationships.id'),
+      db.ForeignKey('relationships.id', ondelete="CASCADE"),
       primary_key=True
   )
   attr_name = db.Column(db.String, nullable=False)

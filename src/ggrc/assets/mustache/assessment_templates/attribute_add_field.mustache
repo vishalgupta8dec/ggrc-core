@@ -5,39 +5,37 @@
   Maintained By: ivan@reciprocitylabs.com
 }}
 
-<li class="row-fluid add-field">
-  <div class="span-custom2-and-half">
+<div class="span-custom2-and-half">
+  <input class="input-block-level"
+    type="text"
+    can-value="selected.title"
+    placeholder="Enter title">
+</div>
+<div class="span-custom1-and-half">
+  <select class="input-block-level" can-value="selected.type">
+    {{#types}}
+      <option>{{type}}</option>
+    {{/types}}
+  </select>
+</div>
+<div class="span2">
+  {{#in_array selected.type valueAttrs}}
     <input class="input-block-level"
+      can-value="selected.values"
       type="text"
-      can-value="selected.title"
-      placeholder="Enter title">
+      placeholder="{{placeholder}}">
+  {{else}}
+    N/A
+  {{/in_array}}
+</div>
+<div class="span2 centered checkbox-wrap">
+</div>
+<div class="span1 centered checkbox-wrap">
+</div>
+<div class="span1 centered checkbox-wrap">
+</div>
+<div class="span2">
+  <div class="pull-right">
+    <a can-click="addField" class="btn btn-small btn-info" href="#">Add field</a>
   </div>
-  <div class="span-custom1-and-half">
-    <select class="input-block-level" can-value="selected.type">
-      {{#types}}
-        <option>{{type}}</option>
-      {{/types}}
-    </select>
-  </div>
-  <div class="span2">
-    {{#in_array selected.type valueAttrs}}
-      <input class="input-block-level"
-        can-value="selected.values"
-        type="text"
-        placeholder="{{placeholder}}">
-    {{else}}
-      N/A
-    {{/in_array}}
-  </div>
-  <div class="span2 centered checkbox-wrap">
-  </div>
-  <div class="span1 centered checkbox-wrap">
-  </div>
-  <div class="span1 centered checkbox-wrap">
-  </div>
-  <div class="span2">
-    <div class="pull-right">
-      <a can-click="addField" class="btn btn-small btn-info" href="#">Add field</a>
-    </div>
-  </div>
-</li>
+</div>

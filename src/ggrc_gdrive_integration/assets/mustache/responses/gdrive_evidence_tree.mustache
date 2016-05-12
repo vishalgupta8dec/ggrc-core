@@ -37,7 +37,7 @@
           {{#if mappings}}
           {{#is_allowed_all 'delete' mappings}}
             {{#using request=parent_instance.request}}{{#with_mapping "folders" request}}
-            <a href="javascript://" class="info-action unmap pull-right" data-toggle="modal-ajax-unmapform" data-object-plural="{{model.table_plural}}" data-object-singular="{{model.model_singular}}" data-modal-reset="reset" data-modal-title="Warning" data-modal-class="modal" data-object-id="{{instance.id}}" data-content-view="/static/mustache/responses/confirm_delete_evidence.mustache" data-object-params='{ "folder": { "title": "{{folders.0.instance.title}}", "link": "{{folders.0.instance.alternateLink}}" } }' href="javascript://">
+            <a href="javascript://" class="info-action unmap pull-right" data-toggle="modal-ajax-unmapform" data-object-plural="{{model.table_plural}}" data-object-singular="{{model.model_singular}}" data-modal-reset="reset" data-modal-title="Warning" data-modal-class="modal" data-object-id="{{instance.id}}" data-object-params='{ "folder": { "title": "{{folders.0.instance.title}}", "link": "{{folders.0.instance.alternateLink}}" } }' href="javascript://">
               {{#result}}<span class="result" {{data 'result'}}></span>{{/result}}
               <i class="fa fa-ban"></i>
               Unmap

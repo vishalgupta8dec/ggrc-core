@@ -5,14 +5,14 @@
     Maintained By: sasmita
 }}
 
-<ul class="quick-list">
+<ul class="get-started__list">
   {{#start_menu}}
     {{#is_allowed 'create' model_name context=null}}
-    <li>
+    <li class="get-started__list__item">
       <a href="javascript://" data-toggle="modal-ajax-form" data-modal-class="modal-wide"
           data-object-singular="{{model_name}}" data-object-plural="{{model_plural}}"
           data-modal-reset="reset" data-form-target="redirect">
-        <span class="icon-wrap">
+        <span class="get-started__list__icon-wrap">
           <i class="fa fa-{{model_lowercase}} white"></i>
         </span>
         {{display_name}}
@@ -20,10 +20,32 @@
     </li>
     {{/is_allowed}}
   {{/start_menu}}
+
+  {{#is_allowed 'create' 'CycleTaskGroupObjectTask' context=null}}
+    <li class="get-started__list__item">
+      <a
+        rel="tooltip"
+        data-placement="left"
+        data-original-title="Create Cycle Task for object"
+        data-object-plural="cycle_task_group_object_tasks"
+        data-modal-class="modal-wide" href="javascript://"
+        data-object-singular="CycleTaskGroupObjectTask"
+        data-toggle="modal-ajax-form"
+        data-modal-reset="reset"
+        data-object-params='{
+          "modal_title": "Create New Cycle Task"}'>
+        <span class="get-started__list__icon-wrap">
+          <i class="fa fa-calendar-check-o white"></i>
+        </span>
+        Create a Task
+      </a>
+    </li>
+  {{/is_allowed}}
+
   {{#any_allowed 'create' object_menu context=null}}
-    <li class="top-space hidden-widgets-list">
+    <li class="get-started__list__item get-started__list__item--top-space hidden-widgets-list">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <span class="icon-wrap">
+        <span class="get-started__list__icon-wrap">
           <i class="fa fa-plus-circle white"></i>
         </span>
         Create new object
@@ -47,10 +69,10 @@
     </li>
   {{/any_allowed}}
 
-  <li class="top-space">
+  <li class="get-started__list__item get-started__list__item--top-space">
     {{! <a href="javascript://" data-toggle="unified-search" data-original-title="search items" data-join-object-type="MultitypeSearch"> }}
     <a href="/objectBrowser">
-      <span class="icon-wrap">
+      <span class="get-started__list__icon-wrap">
         <i class="fa fa-files-o white"></i>
       </span>
       All Objects

@@ -69,6 +69,15 @@
       </div>
     </div>
   </div>
+  {{#if mapper.useTemplates}}
+  <assessment-templates
+    instance="mapper.get_instance"
+    type="mapper.type"
+    binding="related_assessment_templates"
+    assessment-template="mapper.assessmentTemplate"
+  >
+  </assessment-templates>
+  {{/if}}
   <div class="row-fluid">
     <div class="span4">
       <h6>Object type</h6>
@@ -127,15 +136,6 @@
       </div>
     </div>
   </div>
-  {{#if mapper.useTemplates}}
-    <assessment-templates
-      instance="mapper.get_instance"
-      type="mapper.type"
-      binding="related_assessment_templates"
-      assessment-template="mapper.assessmentTemplate"
-    >
-    </assessment-templates>
-  {{/if}}
 </div>
 
 <mapper-results

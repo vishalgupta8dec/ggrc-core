@@ -39,17 +39,24 @@ describe('GGRC.Components.addTemplateField', function () {
     });
 
     it('does not require the "values" field to add a field of type Person',
-      function () {
+      function (done) {
         var selectedObj = new can.Map({
           title: 'External Reviewer',
           type: 'Person',
           values: ''
         });
         scope.attr('selected', selectedObj);
-
         addField.call(scope, scope, $el, ev);
 
-        expect(scope.fields.length).toEqual(1);
+        // FIXME: Because `addField` function calls `_.defer` we need to wait
+        // for scope field to get updated.
+        // It's necessary workaround because otherwise can.Map.validate function
+        // prevents us adding new field. By using _.defer we wait for validate
+        // function to get executed and only then we are adding
+        setTimeout(function () {
+          expect(scope.fields.length).toEqual(1);
+          done();
+        }, 3);
       }
     );
   });

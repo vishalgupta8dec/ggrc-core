@@ -245,7 +245,12 @@ describe('GGRC.Components.objectHistory', function () {
     var origModelAttrDefs;  // original user-friendly attribute name settings
 
     beforeAll(function () {
-      method = Component.prototype._objectChangeDiff;
+      method = Component.prototype._objectChangeDiff.bind({
+        _DATE_FIELDS: {},
+        _objectCADiff: function () {
+          return [];
+        }
+      });
     });
 
     beforeEach(function () {
@@ -329,7 +334,7 @@ describe('GGRC.Components.objectHistory', function () {
           }
         };
 
-        var result = method.call({_DATE_FIELDS: {}}, rev1, rev2);
+        var result = method(rev1, rev2);
 
         expectedChangeList = [{
           fieldName: 'Object Name',
@@ -374,6 +379,105 @@ describe('GGRC.Components.objectHistory', function () {
           expect(result.changes.length).toEqual(0);
         }
       );
+    });
+  });
+
+  describe('_objectCADiff() method', function () {
+    var method;  // the method under test
+
+    beforeAll(function () {
+      method = Component.prototype._objectCADiff;
+    });
+
+    it('detects set attributes', function () {
+      var oldValues = [];
+      var oldDefs = [];
+      var newValues = [{
+        custom_attribute_id: 1,
+        attribute_value: 'custom value'
+      }];
+      var newDefs = [{
+        id: 1,
+        title: 'CA',
+        attribute_type: 'text'
+      }];
+      var result = method(oldValues, oldDefs, newValues, newDefs);
+      expect(result).toEqual([{
+        fieldName: 'CA',
+        origVal: '—',
+        newVal: 'custom value'
+      }]);
+    });
+
+    it('detects unset attributes', function () {
+      var oldValues = [{
+        custom_attribute_id: 1,
+        attribute_value: 'custom value'
+      }];
+      var oldDefs = [{
+        id: 1,
+        title: 'CA',
+        attribute_type: 'text'
+      }];
+      var newValues = [];
+      var newDefs = [];
+      var result = method(oldValues, oldDefs, newValues, newDefs);
+      expect(result).toEqual([{
+        fieldName: 'CA',
+        origVal: 'custom value',
+        newVal: '—'
+      }]);
+    });
+
+    it('detects multiple changed attributes', function () {
+      var oldValues = [{
+        custom_attribute_id: 1,
+        attribute_value: 'v1'
+      }, {
+        custom_attribute_id: 2,
+        attribute_value: 'v2'
+      }, {
+        custom_attribute_id: 3,
+        attribute_value: 'v3'
+      }];
+
+      var oldDefs = [{
+        id: 1,
+        title: 'CA1',
+        attribute_type: 'text'
+      }, {
+        id: 2,
+        title: 'CA2',
+        attribute_type: 'text'
+      }, {
+        id: 3,
+        title: 'CA3',
+        attribute_type: 'text'
+      }];
+
+      var newValues = [{
+        custom_attribute_id: 1,
+        attribute_value: 'v3'
+      }, {
+        custom_attribute_id: 2,
+        attribute_value: 'v4'
+      }, {
+        custom_attribute_id: 3,
+        attribute_value: 'v3'
+      }];
+
+      var newDefs = oldDefs;
+
+      var result = method(oldValues, oldDefs, newValues, newDefs);
+      expect(result).toEqual([{
+        fieldName: 'CA1',
+        origVal: 'v1',
+        newVal: 'v3'
+      }, {
+        fieldName: 'CA2',
+        origVal: 'v2',
+        newVal: 'v4'
+      }]);
     });
   });
 

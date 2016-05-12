@@ -360,7 +360,7 @@
           'mapper.model', this.scope.mapper.model_from_type(type));
       },
       '{mapper} type': function () {
-        this.scope.attr('mapper.term', "");
+        this.scope.attr('mapper.term', '');
         this.scope.attr('mapper.contact', {});
         if (!this.scope.attr('mapper.getList')) {
           this.scope.attr('mapper.relevant').replace([]);
@@ -368,7 +368,17 @@
         this.setModel();
         this.setBinding();
       },
+      '{mapper} assessmentTemplate': function (scope, ev, val, oldVal) {
+        var type;
+        if (_.isEmpty(val)) {
+          return this.scope.attr('mapper.block_type_change', false);
+        }
 
+        val = val.split('-');
+        type = val[1];
+        this.scope.attr('mapper.block_type_change', true);
+        this.scope.attr('mapper.type', type);
+      },
       '#search-by-owner autocomplete:select': function (el, ev, data) {
         this.scope.attr('mapper.contact', data.item);
       },
@@ -410,7 +420,9 @@
         return 'Objects';
       },
       loading_or_saving: function (options) {
-        if (this.attr('mapper.page_loading') || this.attr('mapper.is_saving')) {
+        if (this.attr('mapper.page_loading') ||
+            this.attr('mapper.is_saving') ||
+            this.attr('mapper.block_type_change')) {
           return options.fn();
         }
         return options.inverse();

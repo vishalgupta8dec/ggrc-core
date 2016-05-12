@@ -47,7 +47,7 @@ class TestReader(TestCase):
     obj_id = response.json.get("assessment").get("id")
     self.assertEqual(response.status_code, 201, "Error setting up Assessment")
     self.obj_json = response.json
-    self.obj = self.generator.get_object(all_models.Assessment, obj_id)
+    self.obj = all_models.Assessment.query.get(obj_id)
 
   def _post_relationship(self, user, obj_id):
     """Helper method for creating assignees on an object"""
@@ -127,7 +127,7 @@ class TestReader(TestCase):
         }
     })
     system_id = response.json.get("system").get("id")
-    system = self.generator.get_object(all_models.System, system_id)
+    system = all_models.System.query.get(system_id)
     self.api.post(all_models.Relationship, {
         "relationship": {"source": {
             "id": self.obj.id,

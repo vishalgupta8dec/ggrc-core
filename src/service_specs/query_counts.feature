@@ -44,10 +44,6 @@ Feature: Requests should require a bounded number of queries
       | /api/program_directives          | 10              |
       | /api/relationships               | -1              |
       | /api/requests                    | 12              |
-#      | /api/responses                   | 10              |
-      | /api/documentation_responses     | 12              |
-      | /api/interview_responses         | 12              |
-      | /api/population_sample_responses | 12              |
       | /api/risks                       | 10              |
       | /api/risky_attributes            | 10              |
       | /api/risk_risky_attributes       | 10              |

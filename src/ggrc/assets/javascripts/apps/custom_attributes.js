@@ -28,6 +28,9 @@
               });
               return rq.trigger();
             })
+            .then(function () {
+              this.instance.setup_custom_attributes();
+            }.bind(this))
         ).always(function () {
           this.attr('loading', false);
         }.bind(this));

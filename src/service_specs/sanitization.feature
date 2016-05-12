@@ -38,10 +38,6 @@ Feature: String and Text column HTML sanitization
       | Program           | title, description |
       | Project           | title, description |
       #| Request           | gdrive_upload_path |
-      #| Response          | status |
-      #| DocumentationResponse     | title, description |
-      #| InterviewResponse         | title, description |
-      #| PopulationSampleResponse  | title, description |
       | Section           | title, description, notes |
       | System            | title, version, description, notes |
       | Process           | title, version, description, notes |

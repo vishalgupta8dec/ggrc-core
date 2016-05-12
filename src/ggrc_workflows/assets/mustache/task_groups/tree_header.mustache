@@ -33,9 +33,11 @@
           </a>
         </li>
         {{#if add_item_view}}
+        {{^if_equals parent_instance.kind "Backlog"}}
           <li>
             {{{renderLive add_item_view}}}
           </li>
+        {{/if_equals}}
         {{/if}}
       </ul>
     </div>

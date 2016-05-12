@@ -6,7 +6,7 @@
 """Add object id to custom attributes
 
 Revision ID: 1e2abee7566c
-Revises: 4e989ef86619
+Revises: 1839dabd2357
 Create Date: 2016-02-25 13:11:27.366833
 
 """

@@ -5,7 +5,11 @@
     Maintained By: brad@reciprocitylabs.com
 }}
 
-  <li class="tree-item" data-object-id="{{instance.id}}" data-object-type="{{instance.class.table_singular}}" {{addclass "t-" instance.workflow_state}}>
+  <li class="tree-item "
+    data-object-id="{{instance.id}}"
+    data-object-type="{{instance.class.table_singular}}"
+    {{addclass "t-" instance.workflow_state}}>
+
     <div class="item-main" {{#instance}}{{data 'model'}}{{/instance}}>
       <div class="item-wrap">
         {{{render '/static/mustache/base_objects/open_close.mustache' instance=instance}}}
@@ -13,7 +17,7 @@
           <div class="item-data">
             <div class="row-fluid">
               <div class="span{{display_options.title_width}}">
-                <div class="title tree-title-area" rel="tooltip" data-placement="left" title="" data-original-title="{{instance.title}}">
+                <div class="title tree-title-area" title="{{instance.title}}">
                   {{#is_subtree}}
                     <i class="fa fa-{{instance.class.table_singular}} color"></i>
                   {{/is_subtree}}
@@ -87,12 +91,12 @@
                                     </a>
                                 {{else}}
                                   {{get_default_attr_value attr_name instance}}
-                                {{/in_helpers}}
+                                {{/if_helpers}}
                               {{/default}}
                             {{/switch}}
                           {{/instance}}
                         </div>
-                      {{/if}}
+                      {{/if_equals}}
                     </div>
                   {{/display_attr_list}}
                 </div>

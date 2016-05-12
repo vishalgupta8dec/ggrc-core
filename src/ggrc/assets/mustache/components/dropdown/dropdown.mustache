@@ -9,8 +9,18 @@
   class="{{firstnonempty className 'input-block-level'}}"
   can-value="{{name}}"
   can-change="onChange"
+  {{#isDisabled}}disabled="disabled"{{/isDisabled}}
   >
-  {{#optionsList}}
+{{#options}}
+  {{#if title}}
     <option value="{{value}}" label="{{title}}"></option>
-  {{/optionsList}}
+  {{/if}}
+  {{#if group}}
+    <optgroup label="{{group}}">
+    {{#subitems}}
+      <option value="{{value}}" label="{{title}}"></option>
+    {{/subitems}}
+    </optgroup>
+  {{/if}}
+{{/options}}
 </select>

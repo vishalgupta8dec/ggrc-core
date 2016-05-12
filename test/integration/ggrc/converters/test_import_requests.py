@@ -82,7 +82,7 @@ class TestRequestImport(converters.TestCase):
         "user 5": {"Verifier"},
     }
     self._test_request_users(request_1, users)
-    self.assertEqual(request_1.status, "Open")
+    self.assertEqual(request_1.status, models.Request.START_STATE)
     self.assertEqual(request_1.request_type, "documentation")
 
     # Test second request line in the CSV file
@@ -96,7 +96,7 @@ class TestRequestImport(converters.TestCase):
     }
 
     self._test_request_users(request_2, users)
-    self.assertEqual(request_2.status, "In Progress")
+    self.assertEqual(request_2.status, models.Request.PROGRESS_STATE)
     self.assertEqual(request_2.request_type, "interview")
 
   def test_request_import_states(self):
@@ -135,13 +135,18 @@ class TestRequestImport(converters.TestCase):
       self.assertEqual(set(response[0][message_type]), messages[message_type])
 
     requests = {r.slug: r for r in models.Request.query.all()}
-    self.assertEqual(requests["Request 60"].status, "Open")
-    self.assertEqual(requests["Request 61"].status, "In Progress")
-    self.assertEqual(requests["Request 62"].status, "Finished")
-    self.assertEqual(requests["Request 63"].status, "In Progress")
-    self.assertEqual(requests["Request 64"].status, "In Progress")
-    self.assertEqual(requests["Request 3"].status, "In Progress")
-    self.assertEqual(requests["Request 4"].status, "In Progress")
+    self.assertEqual(requests["Request 60"].status, models.Request.START_STATE)
+    self.assertEqual(requests["Request 61"].status,
+                     models.Request.PROGRESS_STATE)
+    self.assertEqual(requests["Request 62"].status, models.Request.DONE_STATE)
+    self.assertEqual(requests["Request 63"].status,
+                     models.Request.PROGRESS_STATE)
+    self.assertEqual(requests["Request 64"].status,
+                     models.Request.PROGRESS_STATE)
+    self.assertEqual(requests["Request 3"].status,
+                     models.Request.PROGRESS_STATE)
+    self.assertEqual(requests["Request 4"].status,
+                     models.Request.PROGRESS_STATE)
 
   @skip.SkipTest
   def test_request_warnings_errors(self):

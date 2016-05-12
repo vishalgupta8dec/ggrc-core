@@ -111,6 +111,7 @@ dashboard-js-files:
   - apps/quick_search.js
   - apps/business_objects.js
   - apps/custom_attributes.js
+  - components/spinner/spinner.js
   - components/unified_mapper/mapper.js
   - components/unified_mapper/mapper_results.js
   - components/unified_mapper/mapper_checkbox.js
@@ -136,7 +137,11 @@ dashboard-js-files:
   - components/assessment_templates/assessment_templates.js
   - components/modal_wrappers/assessment_template_form.js
   - components/reminder.js
-
+  - components/inline_edit/inline.js
+  - components/inline_edit/inline_checkbox.js
+  - components/inline_edit/inline_dropdown.js
+  - components/inline_edit/inline_input.js
+  - components/inline_edit/inline_text.js
   #- d3.v2.js
   #- related_graph.js
 
@@ -244,12 +249,18 @@ dashboard-js-template-files:
   - issues/modal_content.mustache
   - issues/info.mustache
   - issues/remediation_plan.mustache
+  - components/inline_edit/inline.mustache
+  - components/inline_edit/text.mustache
+  - components/inline_edit/input.mustache
+  - components/inline_edit/checkbox.mustache
+  - components/inline_edit/dropdown.mustache
   - components/autocomplete/autocomplete.mustache
   - components/unified_mapper/mapper_results.mustache
   - components/assessment_templates/assessment_templates.mustache
   - components/dropdown/dropdown.mustache
   - components/object_history/object_history.mustache
   - components/person/person.mustache
+  - components/spinner/spinner.mustache
   - custom_attributes/modal_content.mustache
   - custom_attributes/info.mustache
   - custom_attribute_definitions/modal_content.mustache
@@ -380,14 +391,10 @@ dashboard-js-template-files:
   - requests/modal_content.mustache
   - requests/tier2_content.mustache
   - requests/general_info.mustache
+  - requests/dates_list.mustache
   - requests/reusable_objects.mustache
   - base_templates/subtree.mustache
   - objectives/autocomplete_result.mustache
-  - responses/confirm_delete_evidence.mustache
-  - responses/tree.mustache
-  - responses/info.mustache
-  - responses/tree_add_item.mustache
-  - responses/modal_content.mustache
   - meetings/modal_content.mustache
   - meetings/tree_footer.mustache
   - meetings/tree_add_item.mustache

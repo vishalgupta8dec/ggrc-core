@@ -183,18 +183,22 @@
     }, workflow_dfd);
   });
 
+  /*
+   if_recurring_workflow mustache helper
 
-  Mustache.registerHelper("if_can_edit_response", function(instance, status, options) {
-    var cycle = Mustache.resolve(instance).cycle.reify();
-    var can_edit;
+   Given an object, it  determines if it's a workflow, and if it's a recurring
+   workflow or not.
 
-    status = Mustache.resolve(status);
-    can_edit = cycle.is_current && ["Finished", "Verified"].indexOf(status) === -1;
-    if (can_edit) {
-      return options.fn(options.contexts);
+   @param object - the object we want to check
+   */
+  Mustache.registerHelper("if_recurring_workflow", function (object, options) {
+    object = Mustache.resolve(object);
+    if (object.type === 'Workflow' &&
+        _.includes(['weekly', 'monthly', 'quarterly', 'annually'],
+                   object.frequency)) {
+      return options.fn(this);
     } else {
-      return options.inverse(options.contexts);
+      return options.inverse(this);
     }
   });
-
 })(this.can, this.can.$, this.Mustache);

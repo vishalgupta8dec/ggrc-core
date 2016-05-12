@@ -24,4 +24,5 @@ def contributed_notifications():
   return {
       "Request": data_handlers.get_assignable_data,
       "Assessment": data_handlers.get_assignable_data,
+      "Comment": data_handlers.get_comment_data,
   }

@@ -1,7 +1,7 @@
 # Copyright (C) 2013 Google Inc., authors, and contributors <see AUTHORS file>
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 # Created By: dan@reciprocitylabs.com
-# Maintained By: dan@reciprocitylabs.com
+# Maintained By: peter@reciprocitylabs.com
 
 """Module contains a workflow Cycle model
 """
@@ -27,7 +27,10 @@ class Cycle(WithContact, Stateful, Timeboxed, Described, Titled, Slugged,
   VALID_STATES = (u'Assigned', u'InProgress', u'Finished', u'Verified')
 
   workflow_id = db.Column(
-      db.Integer, db.ForeignKey('workflows.id'), nullable=False)
+      db.Integer,
+      db.ForeignKey('workflows.id', ondelete="CASCADE"),
+      nullable=False,
+  )
   cycle_task_groups = db.relationship(
       'CycleTaskGroup', backref='cycle', cascade='all, delete-orphan')
   cycle_task_group_object_tasks = db.relationship(

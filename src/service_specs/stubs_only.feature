@@ -37,11 +37,6 @@ Feature: Return collections that only provide stub representations
       | Product            |
       | Project            |
       | Program            |
-      #| Request            |
-      #| Response           |
-      #| DocumentationResponse    |
-      #| InterviewResponse        |
-      #| PopulationSampleResponse |
       | Section            |
       | System             |
       | Process            |

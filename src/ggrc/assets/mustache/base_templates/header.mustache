@@ -40,6 +40,31 @@
             {{#is_allowed 'update' instance context='for'}}
               {{> /static/mustache/base_objects/edit_object_link.mustache}}
             {{/is_allowed}}
+
+            <li>
+              {{#is_allowed 'create' 'CycleTaskGroupObjectTask' context=null}}
+                {{#is_allowed 'update' instance context='for'}}
+                  <a
+                    rel="tooltip"
+                    data-placement="left"
+                    data-original-title="Create Cycle Task for object"
+                    data-object-plural="cycle_task_group_object_tasks"
+                    data-modal-class="modal-wide" href="javascript://"
+                    data-object-singular="CycleTaskGroupObjectTask"
+                    data-toggle="modal-ajax-form"
+                    data-modal-reset="reset"
+                    data-object-params='{
+                      "pre_mapped_objects": [{
+                        "type": "{{ instance.type }}",
+                        "id": {{ instance.id }}
+                      }],
+                      "modal_title": "Create New Task"}'>
+                    <i class="fa fa-calendar-check-o"></i> Create task
+                  </a>
+                {{/is_allowed}}
+              {{/is_allowed}}
+            </li>
+
             <li>
               <clipboard-link title="Get permalink" notify="true" text="{{get_permalink_url}}" />
             </li>

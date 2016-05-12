@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+ * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+ * Created By: vladan@reciprocitylabs.com
+ * Maintained By: vladan@reciprocitylabs.com
+ */
+
+.inline-edit {
+  &__title {
+    padding-left: 4px;
+  }
+  &__content {
+    @include border-radius(2px);
+    max-width: 100%;
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    padding: 2px 26px 2px 4px;
+    border: 1px solid transparent;
+    &:hover {
+      border-color: $warmGray;
+      .inline-edit__controls {
+        display: block;
+        height: 100%;
+      }
+    }
+    input,
+    textarea,
+    select {
+      margin-bottom: 0;
+    }
+    .inline-edit--active & {
+      @include border-radius(2px 2px 0 2px);
+      padding: 2px 2px 2px 4px;
+      border: 1px solid $warmGray;
+      &:hover {
+        .inline-edit__controls {
+          height: auto;
+        }
+      }
+    }
+  }
+  &__controls {
+    display: none;
+    @extend %reset-list;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    text-align: center;
+    padding-top: 2px;
+    box-sizing: border-box;
+    border-left: 1px solid $warmGray;
+    background: $pbcListGray;
+    li {
+      display: inline-block;
+    }
+    a {
+      @include opacity(0.6);
+      @include transition(opacity 0.2s ease);
+      &:hover {
+        @include opacity(1);
+      }
+    }
+    &--edit-mode {
+      top: auto;
+      right: -1px;
+      bottom: -22px;
+      width: 40px;
+      height: auto;
+      border: 1px solid $warmGray;
+      border-top: none;
+      background: $pbcListGray;
+    }
+    .inline-edit--active & {
+      display: block;
+    }
+  }
+}

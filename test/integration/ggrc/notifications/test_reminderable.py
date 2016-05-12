@@ -203,8 +203,9 @@ class TestReminderable(ggrc.TestCase):
     with freeze_time("2015-04-01 17:13:15"):
       assessment = self.create_assessment()
 
-      assessment = self.change_status(assessment, "In Progress")
-      assessment = self.change_status(assessment, "Finished")
+      assessment = self.change_status(assessment,
+                                      models.Assessment.PROGRESS_STATE)
+      assessment = self.change_status(assessment, models.Assessment.DONE_STATE)
 
       self.send_reminder(assessment)
 
@@ -228,7 +229,8 @@ class TestReminderable(ggrc.TestCase):
     with freeze_time("2015-04-01 17:13:15"):
       assessment = self.create_assessment()
 
-      assessment = self.change_status(assessment, "In Progress")
+      assessment = self.change_status(assessment,
+                                      models.Assessment.PROGRESS_STATE)
 
       self.send_reminder(assessment)
 
@@ -237,7 +239,7 @@ class TestReminderable(ggrc.TestCase):
               False, "assessment_assessor_reminder").count(),
           1)
 
-      self.change_status(assessment, "Finished")
+      self.change_status(assessment, models.Assessment.DONE_STATE)
 
       _, notif_data = common.get_todays_notifications()
       self.assertEqual(notif_data, {})

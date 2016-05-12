@@ -146,10 +146,6 @@ def get_mapping_rules():
   Special cases:
     Aduit has direct mapping to Program with program_id
     Request has a direct mapping to Audit with audit_id
-    Response has a direct mapping to Request with request_id
-    DocumentationResponse has a direct mapping to Request with request_id
-    DocumentationResponse has normal mappings with all other objects in
-    maping modal
     Section has a direct mapping to Standard/Regulation/Poicy with directive_id
     Anything can be mapped to a request, frotent show audit insted
 

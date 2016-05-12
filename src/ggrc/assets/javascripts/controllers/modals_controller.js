@@ -358,8 +358,8 @@ can.Control("GGRC.Controllers.Modals", {
     }
   },
   serialize_form: function () {
-    var $form = this.options.$content.find("form"),
-        $elements = $form.find(":input:not(isolate-form *)");
+    var $form = this.options.$content.find("form");
+    var $elements = $form.find(":input:not(isolate-form *)");
 
     can.each($elements.toArray(), this.proxy("set_value_from_element"));
   },
@@ -378,6 +378,18 @@ can.Control("GGRC.Controllers.Modals", {
     if (!this.options.model) {
       return;
     }
+    // if data was populated in a callback, use that data from the instance
+    // except if we are editing an instance and some fields are already populated
+    if (!_.isUndefined(el.attr('data-populated-in-callback')) && value === '') {
+      if (!_.isUndefined(instance[name])) {
+        if (typeof instance[name] === 'object' && instance[name] !== null) {
+          this.set_value({name: name, value: instance[name].id});
+        } else {
+          this.set_value({name: name, value: instance[name]});
+        }
+        return;
+      }
+    }
     if (cb) {
       cb = cb.split(' ');
       instance[cb[0]].apply(instance, cb.slice(1).concat([value]));
@@ -385,31 +397,34 @@ can.Control("GGRC.Controllers.Modals", {
       this.set_value({name: name, value: value});
     }
     if (el.is('[data-also-set]')) {
-      can.each(el.data('also-set').split(','), function(oname) {
+      can.each(el.data('also-set').split(','), function (oname) {
         this.set_value({name: oname, value: value});
       }, this);
     }
   },
   set_value: function (item) {
+    var instance = this.options.instance;
+    var name = item.name.split(".");
+    var $elem;
+    var value;
+    var model;
+    var $other;
+
     // Don't set `_wysihtml5_mode` on the instances
     if (item.name === '_wysihtml5_mode') {
       return;
     }
 
-    var instance = this.options.instance
-      , that = this;
     if (!(instance instanceof this.options.model)) {
       instance = this.options.instance
                = new this.options.model(instance && instance.serialize ? instance.serialize() : instance);
     }
-    var name = item.name.split(".")
-      , $elem, value, model, $other;
     $elem = this.options.$content.find("[name='" + item.name + "']:not(isolate-form *)");
     model = $elem.attr("model");
 
     if (model) {
       if (item.value instanceof Array) {
-        value = can.map(item.value, function(id) {
+        value = can.map(item.value, function (id) {
           return CMS.Models.get_instance(model, id);
         });
       } else {
@@ -426,8 +441,8 @@ can.Control("GGRC.Controllers.Modals", {
     }
 
     if ($elem.is("[data-binding]") && $elem.is("[type=checkbox]")) {
-      can.map($elem, function(el){
-        if(el.value != value.id) {
+      can.map($elem, function (el) {
+        if (el.value !== value.id) {
           return;
         }
         if ($(el).is(":checked")) {
@@ -437,12 +452,17 @@ can.Control("GGRC.Controllers.Modals", {
         }
       });
       return;
-    } else if($elem.is("[data-binding]")) {
-      can.each(can.makeArray($elem[0].options), function(opt) {
-        instance.mark_for_deletion($elem.data("binding"), CMS.Models.get_instance(model, opt.value));
+    } else if ($elem.is("[data-binding]")) {
+      can.each(can.makeArray($elem[0].options), function (opt) {
+        instance.mark_for_deletion(
+          $elem.data("binding"),
+          CMS.Models.get_instance(model, opt.value));
       });
       if (value.push) {
-        can.each(value, $.proxy(instance, "mark_for_addition", $elem.data("binding")));
+        can.each(value, $.proxy(
+          instance,
+          "mark_for_addition",
+          $elem.data("binding")));
       } else {
         instance.mark_for_addition($elem.data("binding"), value);
       }
@@ -938,19 +958,9 @@ can.Control("GGRC.Controllers.Modals", {
           && ev.target === this.element[0]
           && !this.options.skip_refresh
           && !this.options.instance.isNew()) {
-        this.options.instance.refresh().then(this.proxy("open_created"));
+        this.options.instance.refresh();
       }
     }
-
-  , open_created : function() {
-    var instance = this.options.instance;
-    if (instance instanceof CMS.Models.Response) {
-      // Open newly created responses
-      var object_type = instance.constructor.table_singular;
-      $('[data-object-id="'+instance.id+'"][data-object-type="'+object_type+'"]')
-        .find('.openclose').click().openclose("open");
-    }
-  }
 
   , destroy : function() {
     if(this.options.model && this.options.model.cache) {
@@ -1011,6 +1021,7 @@ can.Component.extend({
     instance_attr: "@",
     source_mapping: "@",
     source_mapping_source: "@",
+    default_mappings: [], // expects array of objects
     mapping: "@",
     deferred: "@",
     attributes: {},
@@ -1030,6 +1041,15 @@ can.Component.extend({
         this.scope.attr("instance", this.scope.instance.reify());
       }
 
+      this.scope.default_mappings.forEach(function (default_mapping) {
+        if (default_mapping.id && default_mapping.type) {
+          var model = CMS.Models[default_mapping.type];
+          var object_to_add = model.findInCacheById(default_mapping.id);
+          that.scope.instance.mark_for_addition("related_objects_as_source", object_to_add, {});
+          that.scope.list.push(object_to_add);
+        }
+      });
+
       if (!this.scope.source_mapping) {
         this.scope.attr("source_mapping", this.scope.mapping);
       }
@@ -1041,9 +1061,10 @@ can.Component.extend({
         .get_binding(this.scope.source_mapping)
         .refresh_instances()
         .then(function (list) {
-          this.scope.attr("list", can.map(list, function (binding) {
+          var current_list = this.scope.attr("list");
+          this.scope.attr("list", current_list.concat(can.map(list, function (binding) {
             return binding.instance;
-          }));
+          })));
         }.bind(this));
         //this.scope.instance.attr("_transient." + this.scope.mapping, this.scope.list);
       } else {

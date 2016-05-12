@@ -1,0 +1,105 @@
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Program,Code*,Title*,Description,Notes,Manager*,Editor,Reader,No Access,Effective Date,Stop Date,State,Primary Contact,Secondary Contact,Program URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,
+,PMRBACPROGRAM-1,Program Manager Audit RBAC Test,,,"user@example.com
+creatorpm@test.com
+readerpm@test.com
+editorpm@test.com
+adminpm@test.com","creatorpe@test.com
+readerpe@test.com
+Editorpe@test.com
+adminpe@test.com","creatorpr@test.com
+readerpr@test.com
+editorpr@test.com
+Adminpr@test.com",,,,Draft,user@example.com,,,,,PMRBACASSESSMENT-1,AUDIT-1,,,PMRBACCONTROL-1,,,,,,,,"creatorpm@test.com
+readerpm@test.com
+editorpm@test.com
+adminpm@test.com
+creatorpe@test.com
+readerpe@test.com
+editorpe@test.com
+Adminpe@test.com
+Creatorpr@test.com
+readerpr@test.com
+Editorpr@test.com
+adminpr@test.com",,,,,,PMRBACREQUEST-1,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Audit,Code*,Program*,Title*,Description,Planned Start Date,Planned End Date,Planned Report Period from,Planned Report Period to,Status*,Internal Audit Lead*,map:assessment,map:clause,map:contract,map:control,map:issue,map:objective,map:person,map:policy,map:program,map:regulation,map:request,map:section,map:standard,Auditors,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,AUDIT-1,PMRBACPROGRAM-1,2016: Program Manager Audit RBAC Test - Audit 1,,,,,,Planned,user@example.com,PMRBACASSESSMENT-1,PMRBACCLAUSE-1,PMRBACCONTRACT-1,PMRBACCONTROL-1,PMRBACISSUE-1,PMRBACOBJECTIVE-1,,PMRBACPOLICY-1,PMRBACPROGRAM-1,PMRBACREGULATION-1,PMRBACREQUEST-1,PMRBACSECTION-1,PMRBACSTANDARD-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Person,Name,Email*,Company,Role,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,unmap:access group,unmap:assessment,unmap:audit,unmap:clause,unmap:contract,unmap:control,unmap:cycle task group object task,unmap:data asset,unmap:facility,unmap:issue,unmap:market,unmap:objective,unmap:org group,unmap:policy,unmap:process,unmap:product,unmap:program,unmap:project,unmap:regulation,unmap:request,unmap:risk,unmap:section,unmap:standard,unmap:system,unmap:threat,unmap:vendor
+,user@example.com,user@example.com,,Superuser,,PMRBACASSESSMENT-1,AUDIT-1,PMRBACCLAUSE-1,PMRBACCONTRACT-1,PMRBACCONTROL-1,,,,PMRBACISSUE-1,,PMRBACOBJECTIVE-1,,PMRBACPOLICY-1,,,PMRBACPROGRAM-1,,PMRBACREGULATION-1,PMRBACREQUEST-1,,PMRBACSECTION-1,PMRBACSTANDARD-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Admin,admin@test.com,,gGRC Admin,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Creator PM,creatorpm@test.com,,Creator,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Creator,creator@test.com,,Creator,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Reader PM,readerpm@test.com,,Reader,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Reader,reader@test.com,,Reader,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Editor PM,editorpm@test.com,,Editor,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Editor,editor@test.com,,Editor,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Admin PM,adminpm@test.com,,gGRC Admin,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Creator PR,creatorpr@test.com,,Creator,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Reader PR,readerpr@test.com,,Reader,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Editor PR,editorpr@test.com,,Editor,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Admin PR,adminpr@test.com,,gGRC Admin,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Creator PE,creatorpe@test.com,,Creator,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Reader PE,readerpe@test.com,,Reader,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Editor PE,editorpe@test.com,,Editor,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Admin PE,adminpe@test.com,,gGRC Admin,,,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Assessment,Code*,Audit*,Title*,Description,Notes,Test Plan,Owner*,Assessor*,Creator*,Verifier,Effective Date,Stop Date,State*,Primary Contact,Conclusion: Design,Conclusion: Operation,Secondary Contact,Assessment URL,Reference URL,map:access group,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,Finished Date,Verified Date,,,,,,,,,
+,PMRBACASSESSMENT-1,AUDIT-1,Program Manager Audit RBAC Test,,,,,user@example.com,user@example.com,,,,Final,user@example.com,,,,,,,AUDIT-1,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,PMRBACREGULATION-1,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Clause,Code*,Title*,Text of Clause,Notes,Owner*,Effective Date,Stop Date,State,Primary Contact,Secondary Contact,Clause URL,Reference URL,map:access group,map:assessment,map:audit,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,
+,PMRBACCLAUSE-1,Program Manager Audit RBAC Test Clause,,,user@example.com,,,Draft,user@example.com,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Contract,Code*,Title*,Description,Notes,Owner*,Effective Date,Stop Date,State,Primary Contact,Secondary Contact,Contract URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:process,map:product,map:program,map:project,map:request,map:risk,map:section,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,,,,
+,PMRBACCONTRACT-1,Program Manager Audit RBAC Test Contract,,,user@example.com,,,Draft,user@example.com,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Control,Code*,Title*,Description,Notes,Test Plan,Owner*,Effective Date,Stop Date,State,Assertions,Categories,Primary Contact,Fraud Related,Significance,Kind/Nature,Type/Means,Principal Assessor,Secondary Assessor,Secondary Contact,Control URL,Reference URL,Frequency,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,,,,,,,
+,PMRBACCONTROL-1,Program Manager Audit RBAC Test,,,,user@example.com,,,Draft,,,user@example.com,--,--,,,,,,,,,,,AUDIT-1,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Objective,Code*,Title*,Description,Notes,Owner*,State,Primary Contact,Secondary Contact,Objective URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,,
+,PMRBACOBJECTIVE-1,Program Manager Audit RBAC Test,,,user@example.com,Draft,user@example.com,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Policy,Code*,Title*,Description,Notes,Owner*,Effective Date,Stop Date,State,Primary Contact,Kind/Type,Secondary Contact,Policy URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:process,map:product,map:program,map:project,map:request,map:risk,map:section,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,,,
+,PMRBACPOLICY-1,Program Manager Audit RBAC Test Policy,,,user@example.com,,,Draft,user@example.com,,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Regulation,Code*,Title*,Description,Notes,Owner*,Effective Date,Stop Date,State,Primary Contact,Secondary Contact,Regulation URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:process,map:product,map:program,map:project,map:request,map:risk,map:section,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,,,,
+,PMRBACREGULATION-1,Program Manager Audit RBAC Test Regulation,,,user@example.com,,,Draft,user@example.com,,,,,PMRBACASSESSMENT-1,AUDIT-1,,,,,,,,,,,,,,,,,PMRBACSECTION-1,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Request,Code*,Audit*,Title*,Description,Notes,Request Type*,Requester*,Assignee*,Verifier,Starts On*,Due On*,Status*,Test,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,Finished Date,Verified Date,,,,,,,,,,,,,,
+,PMRBACREQUEST-1,AUDIT-1,Request,,,documentation,user@example.com,user@example.com,,04/14/2016,04/21/2016,Not Started,,,,AUDIT-1,,,,,,,,,,,,,,,PMRBACPROGRAM-1,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Section,Code*,Title*,Text of Section,Notes,Owner*,State,Primary Contact,Policy / Regulation / Standard / Contract,Secondary Contact,Section URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,
+,PMRBACSECTION-1,Program Manager Audit RBAC Test Section,,,user@example.com,Draft,user@example.com,,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,PMRBACREGULATION-1,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Standard,Code*,Title*,Description,Notes,Owner*,Effective Date,Stop Date,State,Primary Contact,Secondary Contact,Standard URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:process,map:product,map:program,map:project,map:request,map:risk,map:section,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,,,,,,
+,PMRBACSTANDARD-1,Program Manager Audit RBAC Test Standard,,,user@example.com,,,Draft,user@example.com,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Object type,"Must be unique. Can be left empty for autogeneration. If updating or deleting, code is required",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+Issue,Code*,Title*,Description,Notes,Test Plan,Owner*,Effective Date,Stop Date,State,Primary Contact,Secondary Contact,Issue URL,Reference URL,map:access group,map:assessment,map:audit,map:clause,map:contract,map:control,map:cycle task group object task,map:data asset,map:facility,map:issue,map:market,map:objective,map:org group,map:person,map:policy,map:process,map:product,map:program,map:project,map:regulation,map:request,map:risk,map:section,map:standard,map:system,map:threat,map:vendor,,,,,,,,,,,,,,,,
+,PMRBACISSUE-1,Program Manager Audit RBAC Test,,,,user@example.com,,,Draft,user@example.com,,,,,,AUDIT-1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

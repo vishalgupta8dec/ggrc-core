@@ -43,7 +43,8 @@
         this._results = null;
         que.enqueue(list).trigger().then(function (items) {
           var results = _.map(items, function (item) {
-            return this.generateModel(item, options.assessmentTemplate);
+            var id = options.assessmentTemplate.split('-')[0];
+            return this.generateModel(item, id);
           }.bind(this));
           this._results = results;
 
@@ -58,6 +59,7 @@
           template);
         var title = object.title + ' assessment for ' + this.scope.audit.title;
         var data = {
+          _generated: true,
           audit: this.scope.audit,
           object: object.stub(),
           context: this.scope.audit.context,

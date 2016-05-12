@@ -11,9 +11,11 @@
 """
 
 from ggrc import db
-from ggrc.models import all_models
+from ggrc.login import get_current_user_id
 from ggrc.models import Assessment
+from ggrc.models import Person
 from ggrc.models import Relationship
+from ggrc.models import all_models
 from ggrc.services.common import Resource
 
 
@@ -26,7 +28,7 @@ def init_hook():
     """Apply custom attribute definitions and map people roles
     when generating Assessmet with template"""
 
-    if not src.get("template", None):
+    if not src.get("_generated", False):
       return
 
     related = {
@@ -64,14 +66,16 @@ def get_value(which, audit, obj, template=None):
             (it can be any object in our app ie. Control,Issue, Facility...)
   """
   if not template:
-    return
+    if which in ("assessors", "creator"):
+      # don't use get_current_user because that returns a proxy
+      return Person.query.get(get_current_user_id())
+    return None
 
   types = {
       "Object Owners": [
           owner.person for owner in getattr(obj, 'object_owners', None)
       ],
       "Audit Lead": getattr(audit, 'contact', None),
-      "Object Contact": getattr(obj, 'contact', None),
       "Primary Contact": getattr(obj, 'contact', None),
       "Secondary Contact": getattr(obj, 'secondary_contact', None),
       "Primary Assessor": getattr(obj, 'principal_assessor', None),
@@ -79,7 +83,7 @@ def get_value(which, audit, obj, template=None):
   }
   people = template.default_people.get(which, None)
   if not people:
-    return
+    return None
 
   if isinstance(people, list):
     return [get_by_id({

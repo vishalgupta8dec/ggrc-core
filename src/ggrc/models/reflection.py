@@ -39,7 +39,6 @@ ATTRIBUTE_ORDER = (
     "workflow_owner",
     "workflow_member",
     "task_type",
-    "requested_on",
     "due_on",
     "start_date",
     "end_date",

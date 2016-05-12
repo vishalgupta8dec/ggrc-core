@@ -188,7 +188,7 @@ def get_assignable_data(notif):
     notif (Notification): notification with an Assignable object_type.
 
   Returns:
-    Dict with all data fro the assignable notification or an empty dict if the
+    Dict with all data for the assignable notification or an empty dict if the
     notification is not for a valid assignable object.
   """
   if notif.object_type not in {"Request", "Assessment"}:
@@ -200,3 +200,53 @@ def get_assignable_data(notif):
   elif notif.notification_type.name.endswith("_reminder"):
     return assignable_reminder(notif)
   return {}
+
+
+def generate_comment_notification(obj, comment, person):
+  return {
+      "user": get_person_dict(person),
+      "comment_created": {
+          comment.id: {
+              "description": comment.description,
+              "commentator": get_person_dict(comment.modified_by),
+              "parent_type": obj._inflector.title_singular.title(),
+              "parent_id": obj.id,
+              "parent_url": get_object_url(obj),
+              "parent_title": obj.title
+          }
+      }
+  }
+
+
+def get_comment_data(notif):
+  """Return data for comment notifications.
+
+  This functions checks who should receive the notification and who not, with
+  the Commentable mixin that must be added on the object which has the current
+  comment. If the object on which the comment was made is not Commentable, the
+  function will return an empty dict.
+
+  Args:
+    notif (Notification): notification with a Comment object_type.
+
+  Returns:
+    Dict with all data needed for sending comment notifications.
+  """
+  data = {}
+  recipients = set()
+  comment = get_notification_object(notif)
+  rel = (models.Relationship.find_related(comment, models.Request()) or
+         models.Relationship.find_related(comment, models.Assessment()))
+
+  if rel:
+    comment_obj = (rel.Request_destination or rel.Request_source or
+                   rel.Assessment_destination or rel.Assessment_source)
+
+  if comment_obj.recipients:
+    recipients = set(comment_obj.recipients.split(","))
+
+  for person, assignee_type in comment_obj.assignees:
+    if not recipients or recipients.intersection(set(assignee_type)):
+      data[person.email] = generate_comment_notification(
+          comment_obj, comment, person)
+  return data

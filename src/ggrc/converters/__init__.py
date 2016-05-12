@@ -25,7 +25,6 @@ from ggrc.models import Product
 from ggrc.models import Program
 from ggrc.models import Project
 from ggrc.models import Request
-from ggrc.models import Response
 from ggrc.models import Section
 from ggrc.models import Clause
 from ggrc.models import System
@@ -80,7 +79,6 @@ GGRC_IMPORTABLE = {
     "program": Program,
     "project": Project,
     "request": Request,
-    "response": Response,
     "section": Section,
     "clause": Clause,
     "system": System,

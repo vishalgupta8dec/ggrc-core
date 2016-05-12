@@ -1,0 +1,31 @@
+/*
+ * Copyright (C) 2016 Google Inc., authors, and contributors <see AUTHORS file>
+ * Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+ * Created By: ivan@reciprocitylabs.com
+ * Maintained By: ivan@reciprocitylabs.com
+ */
+
+.sortable-list {
+
+  .sortable-item {
+    text-indent: 7px;
+
+    &::before {
+      content: $fa-var-arrows-v;
+      font: normal normal normal 16px/26px FontAwesome;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: absolute;
+      margin: 0 0 0 -13px;
+      color: #999;
+    }
+  }
+  .sortable-placeholder {
+    background: #fafafa;
+    height: 31px;
+    display: block;
+  }
+  .ui-sortable-helper {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}

@@ -428,7 +428,7 @@ class VerifiedDate(object):
     if (value in self.VERIFIED_STATES and
        self.status not in self.VERIFIED_STATES):
       self.verified_date = datetime.datetime.now()
-      value = "Final"
+      value = self.FINAL_STATE
     elif (value not in self.VERIFIED_STATES and
           value not in self.DONE_STATES and
           (self.status in self.VERIFIED_STATES or
@@ -471,14 +471,15 @@ class Base(ChangeTracked, ContextRBAC, Identifiable):
   """
 
   def log_json(self):
-    d = {}
+    # to integrate with CustomAttributable without order dependencies
+    res = getattr(super(Base, self), "log_json", lambda: {})()
     for column in self.__table__.columns:
       try:
-        d[column.name] = getattr(self, column.name)
+        res[column.name] = getattr(self, column.name)
       except AttributeError:
         pass
-    d['display_name'] = self.display_name
-    return d
+    res['display_name'] = self.display_name
+    return res
 
   @computed_property
   def display_name(self):
@@ -750,7 +751,7 @@ class CustomAttributable(object):
       #    of the custom attributable.
       # TODO: We are ignoring contexts for now
       # new_value.context_id = cls.context_id
-      db.session.add(new_value)
+      cls.custom_attribute_values.append(new_value)
       if ad_id in last_values:
         ca, pv = last_values[ad_id]  # created_at, previous_value
         if pv != attributes[ad_id]:
@@ -793,6 +794,27 @@ class CustomAttributable(object):
     return query.options(
         orm.subqueryload('custom_attribute_values')
     )
+
+  def log_json(self):
+    # pylint: disable=not-an-iterable
+    from ggrc.models.custom_attribute_definition import \
+        CustomAttributeDefinition
+    # to integrate with Base mixin without order dependencies
+    res = getattr(super(CustomAttributable, self), "log_json", lambda: {})()
+    res["custom_attributes"] = [value.log_json()
+                                for value in self.custom_attribute_values]
+    # fetch definitions form database because `self.custom_attribute`
+    # may not be populated
+    defs = CustomAttributeDefinition.query.filter(
+        CustomAttributeDefinition.definition_type == self.type,
+        CustomAttributeDefinition.id.in_([
+            value.custom_attribute_id for value in self.custom_attribute_values
+        ])
+    )
+    # also log definitions to freeze field names in time
+    res["custom_attribute_definitions"] = [definition.log_json()
+                                           for definition in defs]
+    return res
 
 
 class TestPlanned(object):
