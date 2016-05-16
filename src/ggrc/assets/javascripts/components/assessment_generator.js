@@ -47,9 +47,14 @@
             return this.generateModel(item, id);
           }.bind(this));
           this._results = results;
-
           $.when.apply($, results)
-            .always(options.context.closeModal.bind(options.context))
+            .always(function () {
+              // We reload page after creation of assessments
+              // because currently is no way to get custom attributes dynamically
+              setTimeout(function () {
+                window.location.reload();
+              }, 3000);
+            })
             .done(this.notify.bind(this))
             .fail(this.notify.bind(this));
         }.bind(this));

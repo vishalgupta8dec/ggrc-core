@@ -7,22 +7,6 @@
 
 (function (can, $) {
   can.Control('GGRC.Controllers.PbcWorkflows', {}, {
-    '{CMS.Models.Assessment} created': function (model, ev, instance) {
-      var auditDfd;
-      var objectDfd;
-
-      if (!(instance instanceof CMS.Models.Assessment)) {
-        return;
-      }
-
-      this._after_pending_joins(instance, function () {
-        auditDfd = this._create_relationship(instance,
-            instance.audit, instance.audit.context);
-        objectDfd = this._create_relationship(instance,
-            instance.object, instance.audit.context);
-        instance.delay_resolving_save_until($.when(auditDfd, objectDfd));
-      }.bind(this));
-    },
     '{CMS.Models.AssessmentTemplate} updated': function (model, ev, instance) {
       var attrDfd;
       var definitions = instance.custom_attribute_definitions;

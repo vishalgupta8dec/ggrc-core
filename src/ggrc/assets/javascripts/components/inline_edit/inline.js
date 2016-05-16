@@ -82,6 +82,7 @@
     init: function () {
       var scope = this.scope;
       var value = scope.attr('value');
+      var values = scope.attr('values');
       var property = scope.attr('property');
       var instance = scope.attr('instance');
 
@@ -92,9 +93,11 @@
         value = instance.attr(property);
       }
       scope.attr('context.value', value);
-      if (_.isString(scope.attr('values'))) {
-        scope.attr('context.values', scope.attr('values').split(','));
+
+      if (values && _.isString(values)) {
+        values = values.split(',');
       }
+      scope.attr('context.values', values);
     },
     events: {
       click: function () {

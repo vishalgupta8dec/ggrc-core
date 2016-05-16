@@ -12,10 +12,11 @@
 
 from ggrc import db
 from ggrc.login import get_current_user_id
+from ggrc.automapper import AutomapperGenerator
+from ggrc.models import all_models
 from ggrc.models import Assessment
 from ggrc.models import Person
 from ggrc.models import Relationship
-from ggrc.models import all_models
 from ggrc.services.common import Resource
 
 
@@ -28,16 +29,44 @@ def init_hook():
     """Apply custom attribute definitions and map people roles
     when generating Assessmet with template"""
 
-    if not src.get("_generated", False):
+    map_assessment(obj, src.get("object"))
+    map_assessment(obj, src.get("audit"))
+    map_assessment(obj, src.get("program"))
+
+    if not src.get("_generated"):
       return
 
     related = {
-        "template": get_by_id(src.get("template", None)),
-        "obj": get_by_id(src.get("object", None)),
-        "audit": get_by_id(src.get("audit", None)),
+        "template": get_by_id(src.get("template")),
+        "obj": get_by_id(src.get("object")),
+        "audit": get_by_id(src.get("audit")),
     }
     relate_assignees(obj, related)
     relate_ca(obj, related)
+
+
+def map_assessment(assessment, obj):
+  """Creates a relationship between an assessment and an object. This also
+  generates automappings. Fails silently if obj dict does not have id and type
+  keys.
+
+  Args:
+    assessment (models.Assessment): The assessment model
+    obj (dict): A dict with `id` and `type`.
+  Returns:
+    None
+  """
+  obj = obj or {}
+  if 'id' not in obj or 'type' not in obj:
+    return
+  rel = Relationship(**{
+      "source": assessment,
+      "destination_id": obj["id"],
+      "destination_type": obj["type"],
+      "context": assessment.context,
+  })
+  AutomapperGenerator().generate_automappings(rel)
+  db.session.add(rel)
 
 
 def get_by_id(obj):
@@ -81,7 +110,7 @@ def get_value(which, audit, obj, template=None):
       "Primary Assessor": getattr(obj, 'principal_assessor', None),
       "Secondary Assessor": getattr(obj, 'secondary_assessor', None),
   }
-  people = template.default_people.get(which, None)
+  people = template.default_people.get(which)
   if not people:
     return None
 
@@ -90,7 +119,7 @@ def get_value(which, audit, obj, template=None):
         'type': 'Person',
         'id': person_id
     }) for person_id in people]
-  return types.get(people, None)
+  return types.get(people)
 
 
 def assign_people(assignees, assignee_role, assessment, relationships):

@@ -894,13 +894,6 @@
       this.get_mapping('all_documents').bind('length',
           this._set_mandatory_msgs.bind(this));
     },
-    before_save: function (newForm) {
-      if (!this.isNew()) {
-        return;
-      }
-      this.mark_for_addition(
-        'related_objects_as_destination', this.audit.program);
-    },
     _set_recipients: function (recipients) {
       if (recipients){
         labels = ['Creator', 'Assessor', 'Verifier'];
@@ -917,7 +910,7 @@
     },
     save: function () {
       this.attr('recipients', this._get_recipients());
-
+      this.attr('program', this.attr('audit.program'));
       return this._super.apply(this, arguments);
     },
     after_save: function () {

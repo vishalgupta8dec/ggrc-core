@@ -114,3 +114,6 @@ source /vagrant/bin/init_vagrant_env
 export TERM=xterm-color
 export EDITOR=vim
 PS1='\[\033[01;35m\]\u@\h\[\033[01;34m\] \w \n\$\[\033[00m\] '
+
+ln -sf /vagrant-dev/node_modules /vagrant/node_modules
+ln -sf /vagrant-dev/bower_components /vagrant/bower_components
